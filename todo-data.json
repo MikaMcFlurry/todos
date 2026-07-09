@@ -1,5 +1,5 @@
 {
-  "version": "2026-07-09-msg-current-subchat-p0-3",
+  "version": "2026-07-09-p0-5-manual-tests",
   "updatedAt": "2026-07-09",
   "project": "Finanztracker 48h Fable Beta Stabilisierung",
   "dataUpdateRule": "IDs are immutable. Future updates must add new todos/tests with new stable IDs or mark old items deprecated; do not rename/reuse IDs. User state is stored separately by ID in localStorage/IndexedDB.",
@@ -105,7 +105,7 @@
       "batch": "B2",
       "batchTitle": "Mobile Navigation & Seitenzugang",
       "time": "Do 08:00–12:00",
-      "text": "„Referenzen“ umbenennen; verständlicher Vorschlag: „Kategorien & Regeln“ oder „Stammdaten“.",
+      "text": "„Referenzen“ umbenennen; verständlicher Vorschlag: „Kategorien & Regeln“ oder „Stammdaten".",
       "tag": "Wording"
     },
     {
@@ -315,243 +315,230 @@
       "suite": "T-A",
       "suiteTitle": "P0-1 Auth/Login testen",
       "title": "A1 Login erfolgreich",
-      "relatedTodos": [
-        "auth-001",
-        "auth-003"
-      ],
+      "relatedTodos": ["auth-001", "auth-003"],
       "when": "Nach P0-1 / Regression",
-      "steps": [
-        "App öffnen.",
-        "Mit gültigem Testkonto anmelden."
-      ],
-      "expected": [
-        "Du landest auf `/` / Übersicht.",
-        "Nicht auf einer kryptischen Account-Seite.",
-        "Kein raw Supabase UUID-Dump sichtbar."
-      ]
+      "steps": ["App öffnen.", "Mit gültigem Testkonto anmelden."],
+      "expected": ["Du landest auf `/` / Übersicht.", "Nicht auf einer kryptischen Account-Seite.", "Kein raw Supabase UUID-Dump sichtbar."]
     },
     {
       "id": "manual-a2-login-wrong",
       "suite": "T-A",
       "suiteTitle": "P0-1 Auth/Login testen",
       "title": "A2 Login falsch",
-      "relatedTodos": [
-        "auth-002"
-      ],
+      "relatedTodos": ["auth-002"],
       "when": "Nach P0-1 / Regression",
-      "steps": [
-        "Login öffnen.",
-        "Falsches Passwort eingeben."
-      ],
-      "expected": [
-        "Du bleibst im Loginformular.",
-        "Deutsche Fehlermeldung erscheint: `E-Mail oder Passwort ist falsch. Bitte prüfe deine Eingabe.`"
-      ]
+      "steps": ["Login öffnen.", "Falsches Passwort eingeben."],
+      "expected": ["Du bleibst im Loginformular.", "Deutsche Fehlermeldung erscheint: `E-Mail oder Passwort ist falsch. Bitte prüfe deine Eingabe.`"]
     },
     {
       "id": "manual-a3-protected-route",
       "suite": "T-A",
       "suiteTitle": "P0-1 Auth/Login testen",
       "title": "A3 Geschützte Route ohne Login",
-      "relatedTodos": [
-        "auth-003"
-      ],
+      "relatedTodos": ["auth-003"],
       "when": "Nach P0-1 / Regression",
-      "steps": [
-        "Abmelden.",
-        "Direkt `/dashboard` oder `/accounts` öffnen."
-      ],
-      "expected": [
-        "Saubere Weiterleitung zu Login.",
-        "Keine 500-Fehlerseite."
-      ]
+      "steps": ["Abmelden.", "Direkt `/dashboard` oder `/accounts` öffnen."],
+      "expected": ["Saubere Weiterleitung zu Login.", "Keine 500-Fehlerseite."]
     },
     {
       "id": "manual-a4-login-while-authenticated",
       "suite": "T-A",
       "suiteTitle": "P0-1 Auth/Login testen",
       "title": "A4 Bereits eingeloggt Login öffnen",
-      "relatedTodos": [
-        "auth-001"
-      ],
+      "relatedTodos": ["auth-001"],
       "when": "Nach P0-1 / Regression",
-      "steps": [
-        "Eingeloggt bleiben.",
-        "`/auth/login` öffnen."
-      ],
-      "expected": [
-        "Du wirst in die App weitergeleitet."
-      ]
+      "steps": ["Eingeloggt bleiben.", "`/auth/login` öffnen."],
+      "expected": ["Du wirst in die App weitergeleitet."]
     },
     {
       "id": "manual-b1-iphone-bottom-nav",
       "suite": "T-B",
       "suiteTitle": "P0-2 Mobile Navigation testen",
       "title": "B1 iPhone / schmaler Viewport",
-      "relatedTodos": [
-        "nav-001",
-        "nav-003"
-      ],
+      "relatedTodos": ["nav-001", "nav-003"],
       "when": "Nach P0-2 / Regression",
-      "steps": [
-        "App auf iPhone oder Browser-Simulation öffnen.",
-        "Unten die Mobile Bottom Navigation prüfen."
-      ],
-      "expected": [
-        "Start, Dashboard, Review, Budgets, Ausgleich sichtbar.",
-        "Zusätzlich `Mehr` sichtbar."
-      ]
+      "steps": ["App auf iPhone oder Browser-Simulation öffnen.", "Unten die Mobile Bottom Navigation prüfen."],
+      "expected": ["Start, Dashboard, Review, Budgets, Ausgleich sichtbar.", "Zusätzlich `Mehr` sichtbar."]
     },
     {
       "id": "manual-b2-more-menu",
       "suite": "T-B",
       "suiteTitle": "P0-2 Mobile Navigation testen",
       "title": "B2 Mehr-Menü",
-      "relatedTodos": [
-        "nav-001",
-        "nav-005"
-      ],
+      "relatedTodos": ["nav-001", "nav-005"],
       "when": "Nach P0-2 / Regression",
-      "steps": [
-        "Auf `Mehr` tippen."
-      ],
-      "expected": [
-        "Ein Menü/Sheet öffnet sich.",
-        "Folgende Seiten sind sichtbar: Start, Dashboard, Review, Budgets, Ausgleich, Konten, Kategorien & Händler, Haushalt, Konto."
-      ]
+      "steps": ["Auf `Mehr` tippen."],
+      "expected": ["Ein Menü/Sheet öffnet sich.", "Folgende Seiten sind sichtbar: Start, Dashboard, Review, Budgets, Ausgleich, Konten, Kategorien & Händler, Haushalt, Konto."]
     },
     {
       "id": "manual-b3-no-dead-end",
       "suite": "T-B",
       "suiteTitle": "P0-2 Mobile Navigation testen",
       "title": "B3 Unterseiten kein Dead-End",
-      "relatedTodos": [
-        "nav-002",
-        "nav-004"
-      ],
+      "relatedTodos": ["nav-002", "nav-004"],
       "when": "Nach P0-2 / Regression",
-      "steps": [
-        "Über `Mehr` zu `Konten` wechseln.",
-        "Prüfen, ob Navigation weiter sichtbar/erreichbar bleibt.",
-        "Danach zu `Kategorien & Händler`."
-      ],
-      "expected": [
-        "Keine Seite ist Sackgasse.",
-        "Rückweg zu Start/Übersicht ist möglich."
-      ]
+      "steps": ["Über `Mehr` zu `Konten` wechseln.", "Prüfen, ob Navigation weiter sichtbar/erreichbar bleibt.", "Danach zu `Kategorien & Händler`."],
+      "expected": ["Keine Seite ist Sackgasse.", "Rückweg zu Start/Übersicht ist möglich."]
     },
     {
       "id": "manual-b4-no-horizontal-overflow",
       "suite": "T-B",
       "suiteTitle": "P0-2 Mobile Navigation testen",
       "title": "B4 Kein horizontaler Überlauf",
-      "relatedTodos": [
-        "nav-003"
-      ],
+      "relatedTodos": ["nav-003"],
       "when": "Nach P0-2 / Regression",
-      "steps": [
-        "iPhone Portrait testen.",
-        "App durch Start, Dashboard, Konten, Kategorien & Händler bewegen."
-      ],
-      "expected": [
-        "Keine horizontale Scrollbar.",
-        "Keine abgeschnittenen Navigationsbuttons."
-      ]
+      "steps": ["iPhone Portrait testen.", "App durch Start, Dashboard, Konten, Kategorien & Händler bewegen."],
+      "expected": ["Keine horizontale Scrollbar.", "Keine abgeschnittenen Navigationsbuttons."]
     },
     {
       "id": "manual-c1-dialog-open",
       "suite": "T-C",
       "suiteTitle": "P0-3 Quick Entry testen",
       "title": "C1 Dialog öffnen",
-      "relatedTodos": [
-        "qe-001"
-      ],
+      "relatedTodos": ["qe-001"],
       "when": "Erst nach P0-3-Claude-Fix",
-      "steps": [
-        "Auf iPhone Portrait öffnen.",
-        "Auf `Ausgabe erfassen` tippen."
-      ],
-      "expected": [
-        "Dialog/Sheet bleibt vollständig im sichtbaren Bildschirm.",
-        "Titel `Ausgabe erfassen` sichtbar.",
-        "Schließen/Abbrechen erreichbar."
-      ]
+      "steps": ["Auf iPhone Portrait öffnen.", "Auf `Ausgabe erfassen` tippen."],
+      "expected": ["Dialog/Sheet bleibt vollständig im sichtbaren Bildschirm.", "Titel `Ausgabe erfassen` sichtbar.", "Schließen/Abbrechen erreichbar."]
     },
     {
       "id": "manual-c2-required-fields",
       "suite": "T-C",
       "suiteTitle": "P0-3 Quick Entry testen",
       "title": "C2 Pflichtfelder",
-      "relatedTodos": [
-        "qe-001",
-        "qe-002"
-      ],
+      "relatedTodos": ["qe-001", "qe-002"],
       "when": "Erst nach P0-3-Claude-Fix",
-      "steps": [
-        "Betrag eintragen.",
-        "Konto auswählen.",
-        "Kategorie auswählen/eintragen.",
-        "Einnahme/Ausgabe umschalten."
-      ],
-      "expected": [
-        "Alle Pflichtfelder sind erreichbar.",
-        "Tastatur verdeckt nichts dauerhaft.",
-        "Kein horizontaler Überlauf."
-      ]
+      "steps": ["Betrag eintragen.", "Konto auswählen.", "Kategorie auswählen/eintragen.", "Einnahme/Ausgabe umschalten."],
+      "expected": ["Alle Pflichtfelder sind erreichbar.", "Tastatur verdeckt nichts dauerhaft.", "Kein horizontaler Überlauf."]
     },
     {
       "id": "manual-c3-more-details",
       "suite": "T-C",
       "suiteTitle": "P0-3 Quick Entry testen",
       "title": "C3 Weitere Details",
-      "relatedTodos": [
-        "qe-002",
-        "qe-003"
-      ],
+      "relatedTodos": ["qe-002", "qe-003"],
       "when": "Erst nach P0-3-Claude-Fix",
-      "steps": [
-        "`Weitere Details` öffnen.",
-        "Zu allen Feldern scrollen: Datum, Händler, Budget, Beschreibung/Notiz, Beleg, Split."
-      ],
-      "expected": [
-        "Alle Felder erreichbar.",
-        "Speichern und Abbrechen weiterhin erreichbar."
-      ]
+      "steps": ["`Weitere Details` öffnen.", "Zu allen Feldern scrollen: Datum, Händler, Budget, Beschreibung/Notiz, Beleg, Split."],
+      "expected": ["Alle Felder erreichbar.", "Speichern und Abbrechen weiterhin erreichbar."]
     },
     {
       "id": "manual-c4-preview-mode",
       "suite": "T-C",
       "suiteTitle": "P0-3 Quick Entry testen",
       "title": "C4 Preview-Modus",
-      "relatedTodos": [
-        "qe-004"
-      ],
+      "relatedTodos": ["qe-004"],
       "when": "Erst nach P0-3-Claude-Fix",
-      "steps": [
-        "Wenn Backend nicht konfiguriert ist: Eintrag speichern."
-      ],
-      "expected": [
-        "Klare Meldung, dass der Eintrag NICHT gespeichert wurde."
-      ]
+      "steps": ["Wenn Backend nicht konfiguriert ist: Eintrag speichern."],
+      "expected": ["Klare Meldung, dass der Eintrag NICHT gespeichert wurde."]
     },
     {
       "id": "manual-c5-real-save",
       "suite": "T-C",
       "suiteTitle": "P0-3 Quick Entry testen",
       "title": "C5 Echter Save",
-      "relatedTodos": [
-        "qe-004"
-      ],
+      "relatedTodos": ["qe-004"],
       "when": "Erst nach P0-3-Claude-Fix, nur mit Backend/Testkonto",
-      "steps": [
-        "Wenn Backend/Testkonto aktiv ist: realen Testeintrag speichern."
-      ],
-      "expected": [
-        "Erfolgsmeldung sichtbar.",
-        "Kein UI-Freeze.",
-        "Übersicht bleibt nutzbar.",
-        "Testeintrag ggf. in Review/Transaktionen sichtbar, falls UI vorhanden."
-      ]
+      "steps": ["Wenn Backend/Testkonto aktiv ist: realen Testeintrag speichern."],
+      "expected": ["Erfolgsmeldung sichtbar.", "Kein UI-Freeze.", "Übersicht bleibt nutzbar.", "Testeintrag ggf. in Review/Transaktionen sichtbar, falls UI vorhanden."]
+    },
+    {
+      "id": "manual-d1-darkmode-baseline",
+      "suite": "T-D",
+      "suiteTitle": "P0-4 Darkmode & visuelles Grunddesign testen",
+      "title": "D1 Darkmode-Basis",
+      "relatedTodos": ["theme-001"],
+      "when": "Nach P0-4 / Regression",
+      "steps": ["App öffnen.", "Darkmode aktivieren.", "Übersicht, Dashboard, Review, Budgets, Ausgleich, Konten, Kategorien & Händler, Haushalt und Konto prüfen."],
+      "expected": ["App wirkt deutlich dunkler/schwarz-grau.", "Roter Akzent ist sichtbar, aber nicht überladen.", "Keine grell-weißen Flächen im Darkmode."]
+    },
+    {
+      "id": "manual-d2-input-contrast",
+      "suite": "T-D",
+      "suiteTitle": "P0-4 Darkmode & visuelles Grunddesign testen",
+      "title": "D2 Eingabekontrast",
+      "relatedTodos": ["theme-002", "theme-005"],
+      "when": "Nach P0-4 / Regression",
+      "steps": ["Darkmode aktivieren.", "Loginformular, Quick Entry, Konten anlegen und Kategorien/Händler-Eingaben prüfen."],
+      "expected": ["Text gut lesbar.", "Placeholder erkennbar, aber sekundär.", "Fokuszustand deutlich sichtbar.", "Select/Input/Textarea wirken zusammengehörig."]
+    },
+    {
+      "id": "manual-d3-theme-toggle",
+      "suite": "T-D",
+      "suiteTitle": "P0-4 Darkmode & visuelles Grunddesign testen",
+      "title": "D3 Theme Toggle",
+      "relatedTodos": ["theme-003"],
+      "when": "Nach P0-4 / Regression",
+      "steps": ["Toggle im Header anschauen.", "Light zu Dark wechseln.", "Seite neu laden.", "Dark zu Light wechseln.", "Seite neu laden."],
+      "expected": ["Toggle sieht absichtlich gestaltet aus.", "Nicht wie roher KI-/Emoji-Button.", "Zustand bleibt nach Reload erhalten.", "Keine störende helle Flash-Wirkung."]
+    },
+    {
+      "id": "manual-d4-overlap-smoke",
+      "suite": "T-D",
+      "suiteTitle": "P0-4 Darkmode & visuelles Grunddesign testen",
+      "title": "D4 Overlap Smoke Test",
+      "relatedTodos": ["theme-004"],
+      "when": "Nach P0-4 / Regression",
+      "steps": ["iPhone Portrait testen.", "Mobile Navigation nutzen.", "Mehr-Menü öffnen.", "Quick Entry öffnen.", "Weitere Details öffnen."],
+      "expected": ["Header, Bottom-Nav, Mehr-Sheet und Quick-Entry-Sheet überlappen keine wichtigen Aktionen dauerhaft.", "Kein horizontaler Überlauf.", "Schließen/Speichern/Navigation bleiben erreichbar."]
+    },
+    {
+      "id": "manual-d5-component-consistency",
+      "suite": "T-D",
+      "suiteTitle": "P0-4 Darkmode & visuelles Grunddesign testen",
+      "title": "D5 Component Consistency",
+      "relatedTodos": ["theme-005"],
+      "when": "Nach P0-4 / Regression",
+      "steps": ["Button-Stile prüfen: Primär, Sekundär, Ghost, Destructive.", "Cards/StatTiles/EmptyState prüfen.", "Inputs/Selects/Textareas prüfen."],
+      "expected": ["Alles wirkt aus einem System.", "Darkmode und Lightmode sind beide nutzbar.", "Fokus/Fehler/Disabled-Zustände bleiben klar."]
+    },
+    {
+      "id": "manual-e1-household-no-raw-uuid",
+      "suite": "T-E",
+      "suiteTitle": "P0-5 Datenanzeige, Haushalt & Beitritt testen",
+      "title": "E1 Keine raw UUIDs im Haushalt",
+      "relatedTodos": ["data-001"],
+      "when": "Nach P0-5 / Regression",
+      "steps": ["Eingeloggt Haushalt-Seite öffnen.", "Prüfen, ob irgendwo lange technische IDs/UUIDs sichtbar sind."],
+      "expected": ["Keine vollständige Supabase-UUID sichtbar.", "Keine Anleitung, eine Nutzer-ID zu kopieren/weiterzugeben."]
+    },
+    {
+      "id": "manual-e2-member-labels-readable",
+      "suite": "T-E",
+      "suiteTitle": "P0-5 Datenanzeige, Haushalt & Beitritt testen",
+      "title": "E2 Mitglieder lesbar",
+      "relatedTodos": ["data-001", "data-002"],
+      "when": "Nach P0-5 / Regression",
+      "steps": ["Haushalt mit mindestens einem Mitglied öffnen.", "Mitgliederliste prüfen."],
+      "expected": ["Eigener Nutzer ist als `Ich`, Name oder E-Mail erkennbar.", "Andere Nutzer heißen z. B. `Mitglied 2` oder haben verständliche Namen/E-Mail, falls verfügbar.", "Keine kryptischen ID-Fragmente als Hauptidentität."]
+    },
+    {
+      "id": "manual-e3-invite-code-state",
+      "suite": "T-E",
+      "suiteTitle": "P0-5 Datenanzeige, Haushalt & Beitritt testen",
+      "title": "E3 Einladungscode-Zustand",
+      "relatedTodos": ["data-003"],
+      "when": "Nach P0-5 / Regression",
+      "steps": ["Haushalt-Seite öffnen.", "Bereich Einladung/Beitritt prüfen."],
+      "expected": ["Es wird kein roher Supabase-ID-Invite verlangt.", "Wenn noch kein echter Code verfügbar ist, wird das ehrlich als geplant/deaktiviert angezeigt.", "Kein Fake-Code, der angeblich funktioniert."]
+    },
+    {
+      "id": "manual-e4-join-request-copy",
+      "suite": "T-E",
+      "suiteTitle": "P0-5 Datenanzeige, Haushalt & Beitritt testen",
+      "title": "E4 Join-Request-Copy",
+      "relatedTodos": ["data-004"],
+      "when": "Nach P0-5 / Regression",
+      "steps": ["Hinweise zum Beitritt in bestehenden Haushalt lesen."],
+      "expected": ["Verständlich: später Einladungscode / Beitrittsanfrage / Admin-Freigabe.", "Keine falsche Erwartung, dass vollständige Join-Logik schon fertig ist."]
+    },
+    {
+      "id": "manual-e5-pr32-household-check",
+      "suite": "T-E",
+      "suiteTitle": "P0-5 Datenanzeige, Haushalt & Beitritt testen",
+      "title": "E5 PR #32 Household-Check",
+      "relatedTodos": ["data-005"],
+      "when": "Nach P0-5 / Regression",
+      "steps": ["Changelog/PR-Report prüfen."],
+      "expected": ["Es ist klar, ob `householdRepository.ts` angefasst wurde.", "PR #32 wurde nicht blind übernommen.", "Tasks 41–47 wurden nicht vermischt."]
     }
   ],
   "deprecatedIds": []
