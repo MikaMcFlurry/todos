@@ -56,6 +56,7 @@ const TEST_KEY='finanztracker_48h_test_state_v1';
 const NOTE_KEY='finanztracker_48h_batch_notes_v1';
 const DB_NAME='finanztrackerTodoTool';
 const DB_STORE='screenshots';
+const DATA_CACHE_KEY='finanztracker_48h_cached_data_v1';
 let DATA={version:'fallback',todos:[],tests:[]};
 let currentTab='todos';
 
@@ -74,8 +75,9 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&l
 function loadJSON(k){try{return JSON.parse(localStorage.getItem(k)||'{}')}catch{return{}}}
 function saveJSON(k,v){localStorage.setItem(k,JSON.stringify(v));markSaved()}
 function markSaved(){document.getElementById('saved').textContent='Gespeichert: '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}
-function migrateTodoState(){const s=loadJSON(TODO_KEY);let changed=false;for(const [oldId,newId] of Object.entries(ID_ALIASES)){if(s[oldId] && !s[newId]){s[newId]=true;changed=true}}if(changed)saveJSON(TODO_KEY,s)}
-async function loadData(){try{const r=await fetch('todo-data.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);DATA=await r.json();document.getElementById('dataVersion').textContent='Listenversion: '+(DATA.version||'unbekannt')+' · '+(DATA.updatedAt||'');}catch(e){document.getElementById('dataVersion').innerHTML='<span class="error">todo-data.json konnte nicht geladen werden: '+esc(e.message)+'</span>';}migrateTodoState();render();}
+function normalizeDoneMap(input){const out={};if(!input||typeof input!=='object')return out;for(const [k,v] of Object.entries(input)){const id=ID_ALIASES[k]||k;const done=(v===true)||(v&&typeof v==='object'&&v.done===true);if(done)out[id]=true;}return out;}
+function migrateTodoState(){const merged={};for(const key of ['finanztracker_48h_todo_v2','finanztracker_48h_todo_v3','finanztracker_48h_batch_todo_v1',TODO_KEY]){Object.assign(merged,normalizeDoneMap(loadJSON(key)));}saveJSON(TODO_KEY,merged)}
+async function loadData(){try{const r=await fetch('todo-data.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);DATA=await r.json();if(!Array.isArray(DATA.todos)||!Array.isArray(DATA.tests))throw new Error('todo-data.json hat kein gültiges todos/tests Format');localStorage.setItem(DATA_CACHE_KEY,JSON.stringify(DATA));document.getElementById('dataVersion').textContent='Listenversion: '+(DATA.version||'unbekannt')+' · '+(DATA.updatedAt||'');}catch(e){const cached=loadJSON(DATA_CACHE_KEY);if(Array.isArray(cached.todos)&&Array.isArray(cached.tests)){DATA=cached;document.getElementById('dataVersion').innerHTML='<span class="badge warn">todo-data.json konnte nicht geladen werden, nutze lokalen Cache: '+esc(DATA.version||'unbekannt')+'</span>';}else{document.getElementById('dataVersion').innerHTML='<span class="error">todo-data.json konnte nicht geladen werden: '+esc(e.message)+'</span>';}}migrateTodoState();render();}
 function groupBy(arr,key){return arr.reduce((a,x)=>{const k=x[key]||'Ohne Gruppe';(a[k]??=[]).push(x);return a},{})}
 function todoGroupMeta(items){const first=items[0]||{};return {id:first.batch,title:first.batchTitle,time:first.time}}
 function testGroupMeta(items){const first=items[0]||{};return {id:first.suite,title:first.suiteTitle,time:first.when}}
@@ -102,7 +104,7 @@ async function renderAllShots(){let shots=[];try{shots=await dbAll();}catch(e){r
 async function removeShot(id){await dbDel(id);renderAllShots();}
 
 async function exportState(){const payload={schema:'finanztracker-todo-tool-v2',exportedAt:new Date().toISOString(),dataVersion:DATA.version,todoState:loadJSON(TODO_KEY),testState:loadJSON(TEST_KEY),generalNotes:localStorage.getItem(NOTE_KEY)||'',screenshots:await dbAll()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='finanztracker-todo-test-backup.json';a.click();URL.revokeObjectURL(a.href);}
-function importState(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=async()=>{try{const p=JSON.parse(r.result);if(p.todoState)localStorage.setItem(TODO_KEY,JSON.stringify(p.todoState));if(p.testState)localStorage.setItem(TEST_KEY,JSON.stringify(p.testState));if(typeof p.generalNotes==='string'){localStorage.setItem(NOTE_KEY,p.generalNotes);document.getElementById('notes').value=p.generalNotes}if(Array.isArray(p.screenshots))await dbClearAndPut(p.screenshots);migrateTodoState();render();alert('Backup importiert.');}catch(e){alert('Import fehlgeschlagen: '+e.message)}};r.readAsText(file);}
+function importState(ev){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=async()=>{try{const p=JSON.parse(r.result);let todoState={};if(p.todoState)Object.assign(todoState,normalizeDoneMap(p.todoState));if(p.done)Object.assign(todoState,normalizeDoneMap(p.done));if(Object.keys(todoState).length)localStorage.setItem(TODO_KEY,JSON.stringify(todoState));if(p.testState)localStorage.setItem(TEST_KEY,JSON.stringify(p.testState));const importedNotes=(typeof p.generalNotes==='string'?p.generalNotes:(typeof p.notes==='string'?p.notes:null));if(importedNotes!==null){localStorage.setItem(NOTE_KEY,importedNotes);document.getElementById('notes').value=importedNotes}if(Array.isArray(p.screenshots))await dbClearAndPut(p.screenshots);migrateTodoState();render();alert('Backup importiert. Hinweis: Alte Backup-Formate werden automatisch in die aktuellen Todo-IDs migriert.');}catch(e){alert('Import fehlgeschlagen: '+e.message)}};r.readAsText(file);}
 const notes=document.getElementById('notes');notes.value=localStorage.getItem(NOTE_KEY)||'';notes.addEventListener('input',()=>{localStorage.setItem(NOTE_KEY,notes.value);markSaved();});
 loadData();
 </script>
