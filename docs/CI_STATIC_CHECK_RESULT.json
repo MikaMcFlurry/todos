@@ -1,0 +1,47 @@
+{
+  "schema": "mika-ai-project-management-static-check-result-v1",
+  "status": "passed",
+  "checkedCommit": "d27bd10a5601ffd87af2f9f4110f829c616d52f4",
+  "workflowRunId": "29100629519",
+  "workflowRunAttempt": "1",
+  "generatedAt": "2026-07-10T14:39:19.831Z",
+  "javascriptSyntax": {
+    "passed": 16,
+    "failed": 0
+  },
+  "staticHttp": {
+    "passed": 26,
+    "total": 26,
+    "failed": 0
+  },
+  "workspace": {
+    "schema": "mika-ai-project-management-tool-v1.1",
+    "projects": [
+      "project-finanztracker",
+      "project-management-tool"
+    ],
+    "htmlAssets": 20,
+    "htmlIds": 46,
+    "duplicateHtmlIds": 0,
+    "serviceWorkerAssets": 27,
+    "startupWatchdog": "present",
+    "jsonTimeoutMs": 6500,
+    "safeWorkspaceFallback": "present",
+    "serviceWorkerTypedFallback": "present",
+    "workflowPhases": 11,
+    "workflowGates": 6,
+    "gateChecklistItems": 12,
+    "workflowChainSteps": 7,
+    "handoffTypes": 4,
+    "workflowFiles": 15,
+    "importScopeGuards": 2,
+    "compactProjectNavigation": "present",
+    "publicDataScan": "clean",
+    "todoDataBlobSha": "c4bda99be81720ecaf433c5bbbe2280f7fa79673"
+  },
+  "todoDataBlobSha": "c4bda99be81720ecaf433c5bbbe2280f7fa79673",
+  "notes": [
+    "This report is written only after every preceding workflow step passed.",
+    "Rendered browser acceptance on a real iPhone/iPad remains a manual check."
+  ]
+}
