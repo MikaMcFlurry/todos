@@ -7,6 +7,9 @@
   <meta name="description" content="Lokales Multi-Projekt-Cockpit für standardisierte KI-Projektworkflows mit sicheren Backups und Legacy-Import.">
   <title>KI-Projektmanagement</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles-features.css">
+  <link rel="stylesheet" href="styles-responsive.css">
+  <link rel="stylesheet" href="styles-components.css">
 </head>
 <body data-context="workspace">
   <header class="app-header">
@@ -40,81 +43,29 @@
       <strong>Privat-Repo empfohlen:</strong> Committe nur freigegebene Projektmetadaten. Persönliche Notizen, Screenshots und Chat-Backups bleiben lokal beziehungsweise in verschlüsselten Exporten.
     </div>
   </header>
-
   <div class="app-shell">
     <aside class="project-sidebar desktop-only hidden" id="projectSidebar" aria-label="Projektnavigation">
-      <div class="sidebar-project-context">
-        <span class="sidebar-project-label">Aktives Projekt</span>
-        <strong id="sidebarProjectName">—</strong>
-        <button class="button button-small button-ghost" type="button" data-back-workspace>Projekt wechseln</button>
-      </div>
-      <div class="sidebar-tools">
-        <label class="field-label" for="globalSearch">Im Projekt suchen</label>
-        <input id="globalSearch" type="search" placeholder="ID, Titel, Inhalt …" autocomplete="off">
-      </div>
+      <div class="sidebar-project-context"><span class="sidebar-project-label">Aktives Projekt</span><strong id="sidebarProjectName">—</strong><button class="button button-small button-ghost" type="button" data-back-workspace>Projekt wechseln</button></div>
+      <div class="sidebar-tools"><label class="field-label" for="globalSearch">Im Projekt suchen</label><input id="globalSearch" type="search" placeholder="ID, Titel, Inhalt …" autocomplete="off"></div>
       <nav id="desktopProjectNav" class="grouped-nav"></nav>
-      <div class="sidebar-footer">
-        <div class="safety-chip"><span>🔒</span><span>Lokale Nutzerdaten werden nicht automatisch ins Repo geschrieben.</span></div>
-      </div>
+      <div class="sidebar-footer"><div class="safety-chip"><span>🔒</span><span>Lokale Nutzerdaten werden nicht automatisch ins Repo geschrieben.</span></div></div>
     </aside>
-
     <main id="mainContent" class="main-content" tabindex="-1">
-      <div id="loadingState" class="card loading-card">
-        <div class="spinner" aria-hidden="true"></div>
-        <div><strong>Workspace wird geladen</strong><p>Projektregister, lokale Zustände und Legacy-Daten werden sicher zusammengeführt.</p></div>
-      </div>
-      <div id="errorState" class="card error-card hidden" role="alert"></div>
-      <div id="viewRoot"></div>
+      <div id="loadingState" class="card loading-card"><div class="spinner" aria-hidden="true"></div><div><strong>Workspace wird geladen</strong><p>Projektregister, lokale Zustände und Legacy-Daten werden sicher zusammengeführt.</p></div></div>
+      <div id="errorState" class="card error-card hidden" role="alert"></div><div id="viewRoot"></div>
     </main>
   </div>
-
-  <nav class="mobile-bottom-nav project-bottom-nav mobile-only hidden" id="projectBottomNav" aria-label="Projekt-Schnellnavigation">
-    <button type="button" data-view="dashboard"><span>⌂</span>Übersicht</button>
-    <button type="button" data-view="work"><span>▦</span>Umsetzung</button>
-    <button type="button" data-view="quality"><span>✓</span>Qualität</button>
-    <button type="button" data-view="ai"><span>AI</span>KI</button>
-    <button type="button" id="projectMoreButton"><span>•••</span>Mehr</button>
-  </nav>
-
+  <nav class="mobile-bottom-nav project-bottom-nav mobile-only hidden" id="projectBottomNav" aria-label="Projekt-Schnellnavigation"><button type="button" data-view="dashboard"><span>⌂</span>Übersicht</button><button type="button" data-view="work"><span>▦</span>Umsetzung</button><button type="button" data-view="quality"><span>✓</span>Qualität</button><button type="button" data-view="ai"><span>AI</span>KI</button><button type="button" id="projectMoreButton"><span>•••</span>Mehr</button></nav>
   <div id="drawerBackdrop" class="drawer-backdrop hidden"></div>
   <aside id="mobileDrawer" class="mobile-drawer hidden" aria-label="Projektmenü" aria-hidden="true">
-    <div class="drawer-head">
-      <div><p class="eyebrow">Projektmenü</p><strong id="drawerProjectName">Bereiche & Werkzeuge</strong></div>
-      <button class="icon-button" id="closeMenuButton" type="button" aria-label="Projektmenü schließen">×</button>
-    </div>
+    <div class="drawer-head"><div><p class="eyebrow">Projektmenü</p><strong id="drawerProjectName">Bereiche & Werkzeuge</strong></div><button class="icon-button" id="closeMenuButton" type="button" aria-label="Projektmenü schließen">×</button></div>
     <button class="button button-ghost drawer-project-switch" type="button" data-back-workspace>← Alle Projekte</button>
-    <div class="drawer-search">
-      <label class="field-label" for="mobileSearch">Im Projekt suchen</label>
-      <input id="mobileSearch" type="search" placeholder="ID, Titel, Inhalt …" autocomplete="off">
-    </div>
+    <div class="drawer-search"><label class="field-label" for="mobileSearch">Im Projekt suchen</label><input id="mobileSearch" type="search" placeholder="ID, Titel, Inhalt …" autocomplete="off"></div>
     <nav id="mobileProjectNav" class="grouped-nav"></nav>
-    <div class="drawer-actions">
-      <button class="button button-primary" id="drawerProjectExport" type="button">Dieses Projekt exportieren</button>
-      <label class="button button-secondary file-button">Projektbackup importieren<input id="drawerProjectImport" type="file" accept="application/json"></label>
-      <button class="button button-ghost" id="drawerGlobalExport" type="button">Globales Backup exportieren</button>
-      <label class="button button-ghost file-button">Globales Backup importieren<input id="drawerGlobalImport" type="file" accept="application/json"></label>
-      <div class="static-limit-note"><strong>Manueller Workflow:</strong> Die statische App kann Chats nicht selbstständig aus ChatGPT übernehmen. Backups und Status werden bewusst hinzugefügt oder importiert.</div>
-    </div>
+    <div class="drawer-actions"><button class="button button-primary" id="drawerProjectExport" type="button">Dieses Projekt exportieren</button><label class="button button-secondary file-button">Projektbackup importieren<input id="drawerProjectImport" type="file" accept="application/json"></label><button class="button button-ghost" id="drawerGlobalExport" type="button">Globales Backup exportieren</button><label class="button button-ghost file-button">Globales Backup importieren<input id="drawerGlobalImport" type="file" accept="application/json"></label><div class="static-limit-note"><strong>Manueller Workflow:</strong> Die statische App kann Chats nicht selbstständig aus ChatGPT übernehmen. Backups und Status werden bewusst hinzugefügt oder importiert.</div></div>
   </aside>
-
-  <dialog id="entryDialog">
-    <form method="dialog" id="entryForm">
-      <div class="dialog-head">
-        <div><p class="eyebrow" id="dialogEyebrow">Neuer Eintrag</p><h2 id="dialogTitle">Eintrag anlegen</h2></div>
-        <button class="icon-button" type="button" data-dialog-close aria-label="Dialog schließen">×</button>
-      </div>
-      <div id="dialogFields" class="form-grid"></div>
-      <div class="dialog-actions">
-        <button class="button button-ghost" type="button" data-dialog-close>Abbrechen</button>
-        <button class="button button-primary" id="dialogSubmit" value="default">Lokal speichern</button>
-      </div>
-    </form>
-  </dialog>
-
+  <dialog id="entryDialog"><form method="dialog" id="entryForm"><div class="dialog-head"><div><p class="eyebrow" id="dialogEyebrow">Neuer Eintrag</p><h2 id="dialogTitle">Eintrag anlegen</h2></div><button class="icon-button" type="button" data-dialog-close aria-label="Dialog schließen">×</button></div><div id="dialogFields" class="form-grid"></div><div class="dialog-actions"><button class="button button-ghost" type="button" data-dialog-close>Abbrechen</button><button class="button button-primary" id="dialogSubmit" value="default">Lokal speichern</button></div></form></dialog>
   <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-
-  <script src="app-core.js" defer></script>
-  <script src="app-views.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="app-core.js" defer></script><script src="app-core-2.js" defer></script><script src="app-core-3.js" defer></script><script src="app-core-4.js" defer></script><script src="app-views.js" defer></script><script src="app-views-2.js" defer></script><script src="app-views-3.js" defer></script><script src="app-views-4.js" defer></script><script src="app-views-5.js" defer></script><script src="app-views-6.js" defer></script><script src="app.js" defer></script><script src="app-2.js" defer></script><script src="app-3.js" defer></script>
 </body>
 </html>
