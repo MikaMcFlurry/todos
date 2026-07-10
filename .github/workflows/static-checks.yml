@@ -60,6 +60,7 @@ jobs:
             styles-responsive.css
             styles-components.css
             styles-v1-1-polish.css
+            app-bootstrap.js
             app-core.js
             app-core-2.js
             app-core-3.js
