@@ -1,0 +1,32 @@
+function bindViewEvents() {
+  $$('[data-open-project]').forEach(button=>button.addEventListener('click',()=>setActiveProject(button.dataset.openProject)));
+  $$('[data-project-view-jump]').forEach(button=>button.addEventListener('click',()=>navigateProject(button.dataset.projectViewJump)));
+  $$('[data-open-dialog]').forEach(button=>button.addEventListener('click',()=>openEntryDialog(button.dataset.openDialog)));
+  $$('[data-scroll-to]').forEach(button=>button.addEventListener('click',()=>document.getElementById(button.dataset.scrollTo)?.scrollIntoView({behavior:'smooth'})));
+  $('#showArchivedWork')?.addEventListener('change',event=>{LOCAL.ui.showArchived=event.target.checked;saveLocal({render:true});});
+  $$('[data-task-id]').forEach(input=>input.addEventListener('change',event=>{const id=event.target.dataset.taskId;LOCAL.batchTaskState[id]={status:event.target.checked?'done':'open',updatedAt:nowIso()};saveLocal({render:true,timeline:{title:`Batch-Task ${id} ${event.target.checked?'abgeschlossen':'wieder geöffnet'}`,description:'Lokaler Status aktualisiert.',type:'batch',targetView:'work'}});}));
+  $$('[data-mika-status]').forEach(select=>select.addEventListener('change',event=>{const task=LOCAL.mikaTasks.find(item=>item.id===event.target.dataset.mikaStatus);if(task){task.status=event.target.value;task.updatedAt=nowIso();saveLocal({render:true,timeline:{title:`Mika-Aufgabe ${task.id}: ${task.status}`,description:task.title,type:'mika-task',targetView:'work'}});}}));
+  $$('[data-gate-status]').forEach(select=>select.addEventListener('change',event=>{LOCAL.gateOverrides||={};LOCAL.gateOverrides[event.target.dataset.gateStatus]={status:event.target.value,updatedAt:nowIso()};saveLocal({render:true,timeline:{title:`Gate ${event.target.dataset.gateStatus}: ${event.target.value}`,description:'Lokaler Gate-Status aktualisiert.',type:'gate',targetView:'workflow'}});}));
+  $$('[data-test-field]').forEach(field=>field.addEventListener('change',event=>updateTestResult(event.target.dataset.testId,event.target.dataset.testField,event.target.value)));
+  $$('[data-screenshot-input]').forEach(input=>input.addEventListener('change',handleScreenshotInput));
+  $$('[data-create-bug-from-test]').forEach(button=>button.addEventListener('click',()=>openEntryDialog('bug',{testId:button.dataset.createBugFromTest})));
+  renderAllScreenshotGrids();
+  $$('[data-entity-status]').forEach(select=>select.addEventListener('change',event=>{const collection=event.target.dataset.entityStatus,id=event.target.dataset.entityId;LOCAL.entityOverrides[collection]||={};LOCAL.entityOverrides[collection][id]={...asObject(LOCAL.entityOverrides[collection][id]),status:event.target.value,updatedAt:nowIso()};saveLocal({render:true,timeline:{title:`${collection} ${id}: ${event.target.value}`,description:'Lokaler Status aktualisiert.',type:'status',targetView:'knowledge'}});}));
+  $$('[data-question-answer]').forEach(area=>area.addEventListener('change',event=>{const id=event.target.dataset.questionAnswer;LOCAL.entityOverrides.questions[id]={...asObject(LOCAL.entityOverrides.questions[id]),finalAnswer:event.target.value,updatedAt:nowIso()};saveLocal({timeline:{title:`Antwort zu ${id} aktualisiert`,description:'Lokale Antwort gespeichert.',type:'question',targetView:'knowledge'}});}));
+  $('#timelineTypeFilter')?.addEventListener('change',event=>{LOCAL.ui.timelineType=event.target.value;saveLocal({render:true});});
+  $$('[data-chat-backup-status]').forEach(select=>select.addEventListener('change',event=>updateChatBackupStatus(event.target.dataset.chatBackupStatus,event.target.value)));
+  $$('[data-record-chat-backup]').forEach(button=>button.addEventListener('click',()=>recordChatBackup(button.dataset.recordChatBackup)));
+  $('#saveDashboardQuickNote')?.addEventListener('click',()=>saveQuickNote($('#dashboardQuickNote').value,$('#dashboardQuickNoteType').value));
+  $('#newQuickNoteButton')?.addEventListener('click',()=>saveQuickNote($('#quickNoteText').value,$('#quickNoteType').value));
+  $$('[data-archive-note]').forEach(button=>button.addEventListener('click',()=>{const note=LOCAL.quickNotes.find(item=>item.id===button.dataset.archiveNote);if(note){note.archived=true;saveLocal({render:true});}}));
+  $('#legacyNotes')?.addEventListener('change',event=>{LOCAL.legacyGeneralNotes=event.target.value;saveLocal({timeline:{title:'Allgemeine Legacy-Notizen aktualisiert',description:'Privater lokaler Inhalt gespeichert.',type:'note',targetView:'data'}});});
+  $('#workspaceSearch')?.addEventListener('change',event=>{setCurrentSearch(event.target.value);renderApp();});
+  $('#workspaceExportButton')?.addEventListener('click',exportGlobalBackup);
+  $('#workspaceImportInput')?.addEventListener('change',event=>{importBackupFile(event.target.files[0],'global');event.target.value='';});
+  $$('[data-project-export]').forEach(button=>button.addEventListener('click',exportProjectBackup));
+  $$('[data-global-export]').forEach(button=>button.addEventListener('click',exportGlobalBackup));
+  $$('[data-project-import]').forEach(input=>input.addEventListener('change',event=>{importBackupFile(event.target.files[0],'project');event.target.value='';}));
+  $$('[data-global-import]').forEach(input=>input.addEventListener('change',event=>{importBackupFile(event.target.files[0],'global');event.target.value='';}));
+  $('#resetStatusesButton')?.addEventListener('click',resetStatuses);
+  if(DATA&&LOCAL.ui.activeView==='data')dbAllForProject(DATA.id).then(items=>{const el=$('#screenshotCount');if(el)el.textContent=String(items.length);}).catch(()=>{});
+}
