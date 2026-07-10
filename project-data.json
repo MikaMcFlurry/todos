@@ -1,235 +1,92 @@
 {
-  "schemaVersion": "project-management-tool-v1",
+  "schema": "mika-ai-project-management-tool-v1.1",
   "updatedAt": "2026-07-10",
-  "project": {
-    "id": "finanztracker-tool",
-    "name": "Finanztracker Tool",
-    "description": "Zentrale Projektübersicht für die Entwicklung, Tests und Handoffs des Finanztracker-Projekts. Das Tool selbst ist projektübergreifend wiederverwendbar.",
-    "status": "Beta",
-    "mode": "Implementation/Test",
-    "currentPhaseId": "phase-project-management-upgrade",
-    "goal": "Ein alltagstaugliches, auditierbares Finanztracking-System planen und schrittweise umsetzen, während Projektentscheidungen, KI-Batches, Tests und Risiken nachvollziehbar bleiben.",
-    "problem": "Projektwissen, Tests, Batches und Handoffs sind über Chats, Dateien und Repositories verteilt und müssen ohne Datenverlust verständlich zusammengeführt werden.",
-    "targetGroup": "Mika als Projektverantwortlicher; später wiederverwendbar für weitere KI-gestützte Projekte.",
-    "successCriteria": [
-      "Nach einer Pause ist der aktuelle Projektstand in unter zwei Minuten verständlich.",
-      "Alte Todo-/Test-Backups bleiben importierbar.",
-      "Private Notizen und Screenshots gelangen nicht in öffentliche Repo-Daten.",
-      "Batches, Mika-Aufgaben, Tests, Bugs, Fragen, Entscheidungen und Risiken sind getrennt sichtbar."
+  "global": {
+    "toolName": "KI-Projektmanagement",
+    "description": "Multi-project cockpit for Mika AI projects.",
+    "privacyMode": "private_repo_recommended",
+    "currentRepositoryVisibility": "public",
+    "privacyNotice": "Commit only sanitized metadata while the repository is public. Keep private notes, screenshots, chat backups and real project evidence local or in a private repository.",
+    "backupPolicy": {
+      "mode": "manual_or_chatgpt_assisted",
+      "automaticChatIngestion": false,
+      "messageReminderThreshold": 15,
+      "backupTriggers": [
+        "Major decision",
+        "Before and after implementation batch",
+        "Before context reset",
+        "After specialist subchat completion"
+      ],
+      "overdueRule": "A chat is overdue when marked needed/overdue or when meaningful work has no linked backup."
+    },
+    "repositoryPolicy": {
+      "recommendedMode": "private",
+      "safeToCommit": [
+        "Sanitized project metadata",
+        "Generic workflow templates",
+        "Public-safe status summaries"
+      ],
+      "localOrPrivateOnly": [
+        "Personal notes",
+        "Screenshots",
+        "Raw chat exports",
+        "Real financial data",
+        "Secrets and access tokens"
+      ]
+    }
+  },
+  "workflowTemplates": {
+    "roles": [
+      {"id":"role-mika","name":"Mika","responsibility":"Owner, decision-maker and product owner."},
+      {"id":"role-chatgpt-project","name":"ChatGPT Project","responsibility":"Organizational center and durable project context."},
+      {"id":"role-masterchat","name":"Masterchat","responsibility":"Project steering, quality control, decisions, handoffs and PR review."},
+      {"id":"role-subchat","name":"Subchats","responsibility":"Specialized analysis areas created and handed back to the masterchat."},
+      {"id":"role-claude-code","name":"Claude Code","responsibility":"Implementation only after a clear, reviewed handoff."},
+      {"id":"role-gemini","name":"Gemini","responsibility":"Second opinion, long-context review and alternative assessment."},
+      {"id":"role-suno","name":"Suno","responsibility":"Music and audio tasks only."}
     ],
-    "nonGoals": [
-      "Kein vollständiger Jira-Ersatz.",
-      "Kein Backend oder Login in V1.",
-      "Keine automatischen GitHub-Schreibaktionen aus der Webapp.",
-      "Keine automatischen Projektentscheidungen."
+    "lifecyclePhases": [
+      {"id":"workflow-phase-0","order":0,"name":"Project idea"},
+      {"id":"workflow-phase-1","order":1,"name":"Project briefing"},
+      {"id":"workflow-phase-2","order":2,"name":"Workflow setup"},
+      {"id":"workflow-phase-3","order":3,"name":"Requirements and scope"},
+      {"id":"workflow-phase-4","order":4,"name":"Architecture and implementation planning"},
+      {"id":"workflow-phase-5","order":5,"name":"Claude-Code preparation"},
+      {"id":"workflow-phase-6","order":6,"name":"Implementation"},
+      {"id":"workflow-phase-7","order":7,"name":"Test and review"},
+      {"id":"workflow-phase-8","order":8,"name":"Rework"},
+      {"id":"workflow-phase-9","order":9,"name":"Beta/release"},
+      {"id":"workflow-phase-10","order":10,"name":"Maintenance/archive"}
     ],
-    "constraints": [
-      "Statische GitHub-Pages-Kompatibilität.",
-      "Stabile IDs und rückwärtskompatible Migration.",
-      "Persönliche Nutzerdaten bleiben lokal und in exportierten Backups.",
-      "Keine sensiblen Daten oder Zugangsdaten in öffentlichen JSON-Dateien."
+    "gates": [
+      {"id":"workflow-gate-1","order":1,"name":"Idea understood","requiresMikaApproval":true},
+      {"id":"workflow-gate-2","order":2,"name":"Scope defined","requiresMikaApproval":true},
+      {"id":"workflow-gate-3","order":3,"name":"Implementation ready","requiresMikaApproval":true},
+      {"id":"workflow-gate-4","order":4,"name":"Batch ready","requiresMikaApproval":true},
+      {"id":"workflow-gate-5","order":5,"name":"Batch reviewed","requiresMikaApproval":true},
+      {"id":"workflow-gate-6","order":6,"name":"Beta ready","requiresMikaApproval":true}
     ],
-    "nextSteps": [
-      "Projektmanagement-Tool V1 auf separatem Branch prüfen.",
-      "Legacy-Backup importieren und Datenverlust-Test durchführen.",
-      "Danach Finanztracker P1-4 Daily UX Stabilization priorisieren."
+    "repositoryChecklist": [
+      "README.md","CHANGELOG.md","CURRENT_STATE.md","docs/00_PROJECT_IDEA.md","docs/01_PROJECT_BRIEFING.md","docs/02_REQUIREMENTS.md","docs/03_SCOPE.md","docs/04_FEATURE_LIST.md","docs/05_NON_GOALS.md","docs/06_ARCHITECTURE.md","docs/07_DATA_MODEL.md","docs/08_UI_UX_STRUCTURE.md","docs/09_TEST_STRATEGY.md","docs/10_SECURITY_PRIVACY.md","docs/decisions/DECISION_LOG.md","ai-workflow/GLOBAL_PROJECT_RULES.md","ai-workflow/MASTERCHAT_RULES.md","ai-workflow/SUBCHAT_RULES.md","ai-workflow/BACKUP_RULES.md","ai-workflow/MODEL_ROUTING_RULES.md","ai-workflow/CLAUDE_CODE_RULES.md","handoffs/claude/","handoffs/subchats/","handoffs/archive/","backups/masterchat/","backups/subchats/","backups/project-status/","project-tool/","tests/","archive/"
+    ],
+    "workflowFiles": [
+      "GLOBAL_AI_WORKFLOW_RULES.md","CHATGPT_PROJECT_INSTRUCTIONS_TEMPLATE.md","MASTERCHAT_RULES.md","SUBCHAT_STARTPROMPT_TEMPLATE.md","SUBCHAT_BACKUP_TEMPLATE.md","PROJECT_REPOSITORY_STRUCTURE.md","PROJECT_MANAGEMENT_TOOL_SPEC.md","CLAUDE_CODE_HANDOFF_TEMPLATE.md","CLAUDE_BATCH_PROMPT_TEMPLATE.md","MODEL_ROUTING_RULES.md","PROJECT_STATUS_TEMPLATE.md","DECISION_LOG_TEMPLATE.md","TEST_AND_ACCEPTANCE_RULES.md","BACKUP_AND_ARCHIVE_RULES.md","MIKA_APPROVAL_GATES.md"
+    ],
+    "modelRoutingRules": [
+      {"id":"route-steering","workType":"Project steering, requirements, review, decisions and handoffs","preferredModel":"ChatGPT / strongest reasoning model","fallback":"Gemini for second opinion","rule":"Keep the masterchat authoritative and record decisions explicitly."},
+      {"id":"route-implementation","workType":"Repository implementation, refactoring and tests","preferredModel":"Claude Code or Codex","fallback":"Another coding model after reviewed handoff","rule":"Implementation starts only after scope, allowed files and acceptance criteria are clear."},
+      {"id":"route-long-context","workType":"Long-context comparison or independent review","preferredModel":"Gemini","fallback":"ChatGPT","rule":"Use as second opinion; do not silently replace masterchat decisions."},
+      {"id":"route-audio","workType":"Music and audio generation","preferredModel":"Suno","fallback":"Other dedicated audio tool","rule":"Only for audio-specific tasks."}
     ]
   },
-  "phases": [
-    {
-      "id": "phase-finanztracker-stabilization",
-      "title": "Finanztracker Beta-Stabilisierung",
-      "status": "In Bearbeitung",
-      "progress": 70,
-      "description": "Historische P0/P1-Batches und manuelle Tests aus dem bisherigen Todo-Tool.",
-      "startDate": "2026-07-09",
-      "targetDate": null
-    },
-    {
-      "id": "phase-project-management-upgrade",
-      "title": "Projektmanagement-Tool V1",
-      "status": "In Bearbeitung",
-      "progress": 55,
-      "description": "Migration vom Todo-/Test-Tool zu einer allgemeinen, statischen Projektübersicht.",
-      "startDate": "2026-07-10",
-      "targetDate": null
-    },
-    {
-      "id": "phase-finanztracker-next",
-      "title": "Finanztracker nächste Implementierungsbatches",
-      "status": "Geplant",
-      "progress": 0,
-      "description": "Nach der Tool-Migration folgen konkrete Daily-UX-Fixes und weitere priorisierte Batches.",
-      "startDate": null,
-      "targetDate": null
-    }
-  ],
-  "batches": [
-    {
-      "id": "pm-v1-001",
-      "title": "Todo-Tool zum KI-Projektmanagement-Tool erweitern",
-      "description": "Statische, mobile und rückwärtskompatible V1 mit getrennten Projekt- und Nutzerdaten.",
-      "status": "In Bearbeitung",
-      "priority": "P0",
-      "phaseId": "phase-project-management-upgrade",
-      "aiModel": "Codex / ChatGPT",
-      "repo": "MikaMcFlurry/todos",
-      "startBranch": "main",
-      "batchBranch": "codex/project-management-tool-v1",
-      "acceptanceCriteria": [
-        "Legacy-Backup bleibt ohne Datenverlust importierbar.",
-        "project-data.json wird bevorzugt und todo-data.json bleibt Fallback.",
-        "Private Notizen und Screenshots bleiben lokal.",
-        "Mobile Safari zeigt keinen horizontalen Seiten-Scroll und keinen Input-Zoom."
-      ],
-      "tasks": [
-        {"id": "pm-v1-task-001", "title": "Bereinigte project-data.json einführen", "tag": "Datenmodell"},
-        {"id": "pm-v1-task-002", "title": "Legacy-Adapter und nicht-destruktiven Import implementieren", "tag": "Migration"},
-        {"id": "pm-v1-task-003", "title": "Dashboard und getrennte Projektbereiche aufbauen", "tag": "UX"},
-        {"id": "pm-v1-task-004", "title": "Mobile Navigation, Validierung und Offline-Cache ergänzen", "tag": "Qualität"},
-        {"id": "pm-v1-task-005", "title": "Manuellen Abnahmetest mit Originalbackup durchführen", "tag": "QA"}
-      ],
-      "createdAt": "2026-07-10",
-      "updatedAt": "2026-07-10"
-    }
-  ],
-  "mikaTasks": [],
-  "tests": [],
-  "bugs": [
-    {
-      "id": "bug-household-regression-001",
-      "title": "Haushaltsbereich nach früherem Stand nicht vollständig funktionsfähig",
-      "severity": "hoch",
-      "status": "offen",
-      "description": "Mehrere historische Haushaltstests sind noch nicht abgeschlossen. Details verbleiben in Mikas lokalem Testbackup.",
-      "relatedTestIds": ["manual-e2-member-labels-readable", "manual-e3-invite-code-state", "manual-e4-join-request-copy", "manual-e5-pr32-household-check"],
-      "relatedBatchIds": ["B5"]
-    },
-    {
-      "id": "bug-final-branch-001",
-      "title": "Finaler Finanztracker-Teststand muss eindeutig dokumentiert werden",
-      "severity": "mittel",
-      "status": "offen",
-      "description": "Der erwartete Branch-/Commit-Stand des historischen Tests ist noch nicht abschließend bestätigt.",
-      "relatedTestIds": ["manual-g4-stand-sicherung"],
-      "relatedBatchIds": ["B7"]
-    }
-  ],
-  "ideas": [
-    {
-      "id": "idea-multi-project-001",
-      "title": "Multi-Projekt-Auswahl und Projektvorlagen",
-      "status": "später",
-      "priority": "P2",
-      "description": "Nach stabiler V1 kann dieselbe Oberfläche mehrere Projektdateien und Startvorlagen verwalten."
-    }
-  ],
-  "questions": [
-    {
-      "id": "question-repo-privacy-001",
-      "title": "Soll das Projektmanagement-Repo langfristig öffentlich bleiben?",
-      "priority": "P1",
-      "status": "offen",
-      "answerOwner": "Mika",
-      "impact": "Bestimmt, ob spätere Synchronisierung und private Projektdaten ein anderes Hosting oder ein privates Repo benötigen."
-    }
-  ],
-  "decisions": [
-    {
-      "id": "decision-static-v1-001",
-      "date": "2026-07-10",
-      "title": "V1 bleibt statisch und GitHub-Pages-fähig",
-      "reason": "Die aktuelle Lösung ist einfach, robust und benötigt für die erste Migration kein Backend.",
-      "alternatives": ["Backend mit Login sofort einführen", "Komplettes Framework-Rewrite"],
-      "decision": "index.html plus statische Assets und JSON-Dateien; lokaler Nutzerstatus in localStorage/IndexedDB.",
-      "impact": "Keine geräteübergreifende Synchronisierung in V1.",
-      "status": "aktiv"
-    },
-    {
-      "id": "decision-data-separation-001",
-      "date": "2026-07-10",
-      "title": "Öffentliche Projektdaten und private Nutzerdaten werden getrennt",
-      "reason": "Das Repository ist öffentlich und darf keine persönlichen Notizen oder Screenshots enthalten.",
-      "alternatives": ["Alles in project-data.json speichern"],
-      "decision": "Bereinigte Struktur im Repo; Testresultate, Mika-Aufgaben, Notizen und Screenshots lokal und im Backup.",
-      "impact": "Backups bleiben für Gerätewechsel zwingend wichtig.",
-      "status": "aktiv"
-    },
-    {
-      "id": "decision-legacy-ids-001",
-      "date": "2026-07-10",
-      "title": "Bestehende IDs bleiben unverändert",
-      "reason": "Lokaler Fortschritt und Screenshots sind über stabile IDs verknüpft.",
-      "alternatives": ["Alle IDs in ein neues Schema umnummerieren"],
-      "decision": "Legacy-IDs werden übernommen; neue IDs verwenden eigene Präfixe und werden nie wiederverwendet.",
-      "impact": "Der Adapter bleibt Bestandteil der V1.",
-      "status": "aktiv"
-    }
-  ],
-  "timeline": [
-    {"id": "timeline-2026-07-09-test", "date": "2026-07-09", "type": "Test", "title": "Finanztracker 48h-Testlauf und lokale Dokumentation", "description": "Historische Batches, Testresultate und Screenshots wurden im Todo-Tool gepflegt."},
-    {"id": "timeline-2026-07-10-backup", "date": "2026-07-10", "type": "Backup", "title": "Legacy-Backup finanztracker-todo-tool-v2 exportiert", "description": "Das Backup dient als verbindlicher Migrationstest und bleibt außerhalb öffentlicher Projektdaten."},
-    {"id": "timeline-2026-07-10-handoff", "date": "2026-07-10", "type": "Handoff", "title": "Vollständiges Codex-Handoff für Projektmanagement-Tool erstellt", "description": "Spezifikation, Architektur, Akzeptanzkriterien, Migrationsregeln und Testmaterial wurden gebündelt."}
-  ],
-  "masterchat": {
-    "status": "Aktueller Projektstand wurde in Handoff-Dateien übergeben.",
-    "lastSummaryDate": "2026-07-10",
-    "nextAction": "Projektmanagement-Tool prüfen; danach Finanztracker P1-4 umsetzen.",
-    "openItems": ["Legacy-Import praktisch testen", "Langfristige Repo-Privatsphäre entscheiden"]
+  "legacySources": {
+    "v1ProjectDataSchema": "project-management-tool-v1",
+    "legacyTodoFile": "todo-data.json",
+    "legacyBackupSchemas": ["finanztracker-todo-tool-v2","ai-project-management-tool-v1"],
+    "financeProjectId": "project-finanztracker"
   },
-  "subchats": [],
-  "aiBatches": [
-    {
-      "id": "ai-batch-pm-v1-001",
-      "title": "Project Management Tool V1",
-      "goal": "Das bestehende Todo-/Test-Tool sicher und rückwärtskompatibel erweitern.",
-      "status": "In Bearbeitung",
-      "priority": "P0",
-      "inputFiles": ["00_CODEX_STARTPROMPT.md", "01_PROJECT_MANAGEMENT_TOOL_SPEC.md", "02_IMPLEMENTATION_PLAN_AND_ARCHITECTURE.md", "05_ACCEPTANCE_CRITERIA_AND_TEST_PLAN.md"],
-      "readFiles": ["index.html", "todo-data.json", "source/finanztracker-todo-test-backup-2026-07-10.json"],
-      "doNotChange": ["Bestehende IDs", "Mikas lokale Notizen", "Mikas Screenshots", "Legacy-Backup-Kompatibilität"],
-      "repo": "MikaMcFlurry/todos",
-      "branch": "codex/project-management-tool-v1",
-      "expectedOutput": "Statische V1 mit project-data.json, Legacy-Adapter, lokaler Nutzerdatenebene und dokumentiertem Testplan."
-    },
-    {
-      "id": "ai-batch-finanztracker-p1-4",
-      "title": "Finanztracker Daily UX Stabilization",
-      "goal": "Quick Entry, mobile Navigation und Theme-Bedienung anhand der Testergebnisse stabilisieren.",
-      "status": "Geplant",
-      "priority": "P1",
-      "inputFiles": ["07_P1-4_FINANZTRACKER_HANDOFF_DAILY_UX_STABILIZATION.md"],
-      "repo": "MikaMcFlurry/Buchhaltung-tool",
-      "expectedOutput": "Gezielter Bugfix-Batch nach Abschluss der Projektmanagement-Tool-Migration."
-    }
-  ],
-  "files": [
-    {"id": "file-project-data", "name": "project-data.json", "path": "/project-data.json", "type": "Projektstruktur", "purpose": "Bereinigte öffentliche Projektdaten", "status": "aktiv", "source": "Codex-Handoff", "lastUpdated": "2026-07-10"},
-    {"id": "file-legacy-data", "name": "todo-data.json", "path": "/todo-data.json", "type": "Legacy-Daten", "purpose": "Rückwärtskompatible Todo-/Test-Quelle", "status": "legacy-aktiv", "source": "Bestehendes Repo", "lastUpdated": "2026-07-10"},
-    {"id": "file-app", "name": "app.js + Module", "path": "/app*.js", "type": "Anwendung", "purpose": "UI, Migration, lokaler Status und Backup", "status": "aktiv", "source": "Projektmanagement-Upgrade", "lastUpdated": "2026-07-10"}
-  ],
-  "backups": [
-    {
-      "id": "backup-legacy-2026-07-10",
-      "date": "2026-07-10",
-      "chatType": "Todo-/Test-Tool Export",
-      "projectState": "Finanztracker P1-3A manuelle Tests",
-      "topics": ["31 erledigte Todo-IDs", "51 Tests", "lokale Notizen", "23 Screenshots"],
-      "nextSteps": ["In V1 importieren", "Datenverlust-Test durchführen"],
-      "path": "lokales Handoff-Paket; nicht im öffentlichen Repo",
-      "includedInMasterchat": true
-    }
-  ],
-  "github": {
-    "repositories": [
-      {"id": "repo-todos", "name": "MikaMcFlurry/todos", "visibility": "public", "role": "Projektmanagement-Tool", "defaultBranch": "main", "warning": "Nicht blind mergen; persönliche Daten bleiben lokal."},
-      {"id": "repo-finanztracker", "name": "MikaMcFlurry/Buchhaltung-tool", "role": "Finanztracker-App", "warning": "Änderungen nur über getrennte, getestete Batches."}
-    ]
-  },
-  "risks": [
-    {"id": "risk-public-data-001", "title": "Private Informationen im öffentlichen Repo", "severity": "kritisch", "probability": "mittel", "impact": "Persönliche Notizen oder Screenshots könnten öffentlich werden.", "status": "behandelt", "mitigation": "Private Daten ausschließlich lokal/Backup; project-data.json wird bereinigt.", "owner": "Projektteam"},
-    {"id": "risk-import-loss-001", "title": "Datenverlust bei Migration alter Backups", "severity": "kritisch", "probability": "niedrig", "impact": "Teststände, Notizen oder Screenshots könnten verloren gehen.", "status": "offen", "mitigation": "Nicht-destruktiver Merge, unbekannte IDs aufbewahren und Originalbackup manuell testen.", "owner": "Codex/Mika"},
-    {"id": "risk-static-sync-001", "title": "Lokaler Status ist nicht automatisch geräteübergreifend", "severity": "mittel", "probability": "hoch", "impact": "Ohne Export sind Änderungen nur im aktuellen Browser verfügbar.", "status": "akzeptiert", "mitigation": "Backup-Aktion prominent anzeigen; Backend erst später prüfen.", "owner": "Mika"}
-  ],
-  "notes": []
+  "projectFiles": [
+    {"id":"project-finanztracker","path":"projects/project-finanztracker.json"},
+    {"id":"project-management-tool","path":"projects/project-management-tool.json"}
+  ]
 }
