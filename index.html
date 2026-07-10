@@ -3,76 +3,97 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#090a0d">
-  <meta name="description" content="Lokales, statisches KI-Projektmanagement-Tool mit rückwärtskompatiblem Todo-/Test-Import.">
+  <meta name="theme-color" content="#08090c">
+  <meta name="description" content="Lokales Multi-Projekt-Cockpit für standardisierte KI-Projektworkflows mit sicheren Backups und Legacy-Import.">
   <title>KI-Projektmanagement</title>
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-context="workspace">
   <header class="app-header">
     <div class="header-main">
-      <button class="icon-button mobile-only" id="openMenuButton" type="button" aria-label="Navigation öffnen">☰</button>
+      <div class="header-leading">
+        <button class="icon-button mobile-only hidden" id="openMenuButton" type="button" aria-label="Projektnavigation öffnen">☰</button>
+        <button class="button button-ghost hidden" id="backToProjectsButton" type="button">← Alle Projekte</button>
+      </div>
       <div class="header-copy">
         <p class="eyebrow">KI-Projektmanagement</p>
-        <h1 id="projectTitle">Projekt wird geladen …</h1>
-        <p id="projectSubtitle">Bereinigte Projektdaten im Repo · persönliche Daten nur lokal</p>
+        <h1 id="appTitle">Projektübersicht wird geladen …</h1>
+        <p id="appSubtitle">Multi-Projekt-Cockpit · private Inhalte bleiben lokal</p>
       </div>
-      <div class="header-status">
+      <div class="header-status desktop-status">
         <span class="badge" id="saveStatus">Lokaler Speicher</span>
         <span class="badge badge-warning" id="validationBadge">Validierung läuft</span>
       </div>
+      <div class="header-actions">
+        <div id="globalUtilityActions" class="utility-actions">
+          <button class="button button-secondary" id="headerGlobalExport" type="button">Alles exportieren</button>
+          <label class="button button-ghost file-button">Alles importieren<input id="headerGlobalImport" type="file" accept="application/json"></label>
+        </div>
+        <div id="projectUtilityActions" class="utility-actions hidden">
+          <button class="button button-secondary" id="headerProjectExport" type="button">Projekt exportieren</button>
+          <label class="button button-ghost file-button">Projekt importieren<input id="headerProjectImport" type="file" accept="application/json"></label>
+        </div>
+        <button class="icon-button" id="reloadButton" type="button" aria-label="Daten neu laden">↻</button>
+      </div>
     </div>
-    <div class="backup-warning" role="note">
-      <strong>Datensicherheit:</strong> Vor größeren Strukturänderungen zuerst ein Backup exportieren. Imports werden standardmäßig zusammengeführt und löschen keine lokalen Inhalte.
+    <div class="privacy-banner" role="note">
+      <strong>Privat-Repo empfohlen:</strong> Committe nur freigegebene Projektmetadaten. Persönliche Notizen, Screenshots und Chat-Backups bleiben lokal beziehungsweise in verschlüsselten Exporten.
     </div>
   </header>
 
   <div class="app-shell">
-    <aside class="sidebar desktop-only" aria-label="Hauptnavigation">
+    <aside class="project-sidebar desktop-only hidden" id="projectSidebar" aria-label="Projektnavigation">
+      <div class="sidebar-project-context">
+        <span class="sidebar-project-label">Aktives Projekt</span>
+        <strong id="sidebarProjectName">—</strong>
+        <button class="button button-small button-ghost" type="button" data-back-workspace>Projekt wechseln</button>
+      </div>
       <div class="sidebar-tools">
-        <label class="field-label" for="globalSearch">Projekt durchsuchen</label>
+        <label class="field-label" for="globalSearch">Im Projekt suchen</label>
         <input id="globalSearch" type="search" placeholder="ID, Titel, Inhalt …" autocomplete="off">
       </div>
-      <nav id="desktopNav" class="nav-list"></nav>
-      <div class="sidebar-actions">
-        <button class="button button-primary" id="exportButton" type="button">Backup exportieren</button>
-        <label class="button button-secondary file-button">Backup importieren<input id="importInput" type="file" accept="application/json"></label>
-        <button class="button button-ghost" id="reloadButton" type="button">Projektdaten neu laden</button>
+      <nav id="desktopProjectNav" class="grouped-nav"></nav>
+      <div class="sidebar-footer">
+        <div class="safety-chip"><span>🔒</span><span>Lokale Nutzerdaten werden nicht automatisch ins Repo geschrieben.</span></div>
       </div>
     </aside>
 
     <main id="mainContent" class="main-content" tabindex="-1">
       <div id="loadingState" class="card loading-card">
         <div class="spinner" aria-hidden="true"></div>
-        <div><strong>Projekt wird geladen</strong><p>project-data.json und Legacy-Daten werden sicher zusammengeführt.</p></div>
+        <div><strong>Workspace wird geladen</strong><p>Projektregister, lokale Zustände und Legacy-Daten werden sicher zusammengeführt.</p></div>
       </div>
       <div id="errorState" class="card error-card hidden" role="alert"></div>
       <div id="viewRoot"></div>
     </main>
   </div>
 
-  <nav class="mobile-bottom-nav mobile-only" aria-label="Schnellnavigation">
-    <button type="button" data-view="dashboard"><span>⌂</span>Start</button>
-    <button type="button" data-view="batches"><span>▦</span>Batches</button>
-    <button type="button" data-view="tests"><span>✓</span>Tests</button>
-    <button type="button" data-view="mikaTasks"><span>◎</span>Mika</button>
-    <button type="button" id="moreButton"><span>•••</span>Mehr</button>
+  <nav class="mobile-bottom-nav project-bottom-nav mobile-only hidden" id="projectBottomNav" aria-label="Projekt-Schnellnavigation">
+    <button type="button" data-view="dashboard"><span>⌂</span>Übersicht</button>
+    <button type="button" data-view="work"><span>▦</span>Umsetzung</button>
+    <button type="button" data-view="quality"><span>✓</span>Qualität</button>
+    <button type="button" data-view="ai"><span>AI</span>KI</button>
+    <button type="button" id="projectMoreButton"><span>•••</span>Mehr</button>
   </nav>
 
   <div id="drawerBackdrop" class="drawer-backdrop hidden"></div>
-  <aside id="mobileDrawer" class="mobile-drawer hidden" aria-label="Weitere Navigation" aria-hidden="true">
+  <aside id="mobileDrawer" class="mobile-drawer hidden" aria-label="Projektmenü" aria-hidden="true">
     <div class="drawer-head">
-      <div><p class="eyebrow">Navigation</p><strong>Alle Projektbereiche</strong></div>
-      <button class="icon-button" id="closeMenuButton" type="button" aria-label="Navigation schließen">×</button>
+      <div><p class="eyebrow">Projektmenü</p><strong id="drawerProjectName">Bereiche & Werkzeuge</strong></div>
+      <button class="icon-button" id="closeMenuButton" type="button" aria-label="Projektmenü schließen">×</button>
     </div>
+    <button class="button button-ghost drawer-project-switch" type="button" data-back-workspace>← Alle Projekte</button>
     <div class="drawer-search">
-      <label class="field-label" for="mobileSearch">Projekt durchsuchen</label>
+      <label class="field-label" for="mobileSearch">Im Projekt suchen</label>
       <input id="mobileSearch" type="search" placeholder="ID, Titel, Inhalt …" autocomplete="off">
     </div>
-    <nav id="mobileNav" class="nav-list"></nav>
+    <nav id="mobileProjectNav" class="grouped-nav"></nav>
     <div class="drawer-actions">
-      <button class="button button-primary" id="mobileExportButton" type="button">Backup exportieren</button>
-      <label class="button button-secondary file-button">Backup importieren<input id="mobileImportInput" type="file" accept="application/json"></label>
+      <button class="button button-primary" id="drawerProjectExport" type="button">Dieses Projekt exportieren</button>
+      <label class="button button-secondary file-button">Projektbackup importieren<input id="drawerProjectImport" type="file" accept="application/json"></label>
+      <button class="button button-ghost" id="drawerGlobalExport" type="button">Globales Backup exportieren</button>
+      <label class="button button-ghost file-button">Globales Backup importieren<input id="drawerGlobalImport" type="file" accept="application/json"></label>
+      <div class="static-limit-note"><strong>Manueller Workflow:</strong> Die statische App kann Chats nicht selbstständig aus ChatGPT übernehmen. Backups und Status werden bewusst hinzugefügt oder importiert.</div>
     </div>
   </aside>
 
