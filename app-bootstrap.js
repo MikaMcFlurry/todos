@@ -94,16 +94,15 @@
   };
 
   window.addEventListener('error', event => {
-    lastError = errorText(event.error || event.message);
-    setTimeout(()=>renderStartupFailure(`JavaScript-Fehler: ${lastError}`),0);
-  });
+    const failedAsset = event.target?.src || event.target?.href || '';
+    lastError = errorText(event.error || event.message || (failedAsset?`Ressource konnte nicht geladen werden: ${failedAsset}`:'Unbekannter Ressourcenfehler'));
+    setTimeout(()=>renderStartupFailure(`Startfehler: ${lastError}`),0);
+  },true);
 
   window.addEventListener('unhandledrejection', event => {
     lastError = errorText(event.reason);
     setTimeout(()=>renderStartupFailure(`Nicht behandelter Startfehler: ${lastError}`),0);
   });
 
-  document.addEventListener('DOMContentLoaded', () => {
-    watchdog = setTimeout(()=>renderStartupFailure(lastError || 'Der Start dauerte länger als 12 Sekunden. Wahrscheinlich hängt ein Datenabruf oder ein veralteter Offline-Cache.'),12000);
-  });
+  watchdog = setTimeout(()=>renderStartupFailure(lastError || 'Der Start dauerte länger als 12 Sekunden. Wahrscheinlich hängt ein Datenabruf, eine App-Datei oder ein veralteter Offline-Cache.'),12000);
 })();
