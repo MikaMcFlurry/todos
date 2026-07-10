@@ -6,11 +6,46 @@
   <meta name="theme-color" content="#08090c">
   <meta name="description" content="Lokales Multi-Projekt-Cockpit für standardisierte KI-Projektworkflows mit sicheren Backups und Legacy-Import.">
   <title>KI-Projektmanagement</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="styles-features.css">
-  <link rel="stylesheet" href="styles-responsive.css">
-  <link rel="stylesheet" href="styles-components.css">
-  <link rel="stylesheet" href="styles-v1-1-polish.css">
+  <link rel="stylesheet" href="styles.css?v=20260710-startfix3">
+  <link rel="stylesheet" href="styles-features.css?v=20260710-startfix3">
+  <link rel="stylesheet" href="styles-responsive.css?v=20260710-startfix3">
+  <link rel="stylesheet" href="styles-components.css?v=20260710-startfix3">
+  <link rel="stylesheet" href="styles-v1-1-polish.css?v=20260710-startfix3">
+  <script>
+    (() => {
+      const escapeHtml = value => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+      window.__pmEmergencyReset = async () => {
+        try {
+          if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(registrations.map(registration => registration.unregister()));
+          }
+          if ('caches' in window) {
+            const keys = await caches.keys();
+            await Promise.all(keys.filter(key => key.includes('mika-ai-project-management')).map(key => caches.delete(key)));
+          }
+        } finally {
+          location.reload();
+        }
+      };
+      window.__pmInlineStartupFailure = message => {
+        if (window.__PM_APP_READY__) return;
+        const title = document.getElementById('appTitle');
+        const loading = document.getElementById('loadingState');
+        const error = document.getElementById('errorState');
+        if (title) title.textContent = 'App konnte nicht vollständig starten';
+        if (loading) loading.classList.add('hidden');
+        if (!error) return;
+        error.classList.remove('hidden');
+        error.innerHTML = `<strong>Der App-Start ist fehlgeschlagen.</strong><p>${escapeHtml(message || 'Eine App-Datei oder ein Datenabruf reagiert nicht.')}</p><div class="inline-actions"><button class="button button-primary" type="button" onclick="location.reload()">Neu laden</button><button class="button button-secondary" type="button" onclick="window.__pmEmergencyReset()">App-Cache zurücksetzen</button></div><p class="small">Lokale Projektstände, Notizen und Screenshots werden dadurch nicht gelöscht.</p>`;
+      };
+      window.addEventListener('error', event => {
+        const resource = event.target && (event.target.src || event.target.href);
+        if (resource) setTimeout(() => window.__pmInlineStartupFailure(`App-Datei konnte nicht geladen werden: ${resource}`), 0);
+      }, true);
+      window.__PM_INLINE_WATCHDOG__ = setTimeout(() => window.__pmInlineStartupFailure('Der Start dauerte länger als 12 Sekunden. Wahrscheinlich blockiert ein alter Offline-Cache oder ein Datenabruf.'), 12000);
+    })();
+  </script>
 </head>
 <body data-context="workspace">
   <header class="app-header">
@@ -92,6 +127,6 @@
   <dialog id="entryDialog"><form method="dialog" id="entryForm"><div class="dialog-head"><div><p class="eyebrow" id="dialogEyebrow">Neuer Eintrag</p><h2 id="dialogTitle">Eintrag anlegen</h2></div><button class="icon-button" type="button" data-dialog-close aria-label="Dialog schließen">×</button></div><div id="dialogFields" class="form-grid"></div><div class="dialog-actions"><button class="button button-ghost" type="button" data-dialog-close>Abbrechen</button><button class="button button-primary" id="dialogSubmit" value="default">Lokal speichern</button></div></form></dialog>
   <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-  <script src="app-bootstrap.js?v=20260710-startfix1" defer></script><script src="app-core.js" defer></script><script src="app-core-2.js" defer></script><script src="app-core-3.js" defer></script><script src="app-core-4.js" defer></script><script src="app-views.js" defer></script><script src="app-views-2.js" defer></script><script src="app-views-3.js" defer></script><script src="app-views-4.js" defer></script><script src="app-views-5.js" defer></script><script src="app-views-6.js" defer></script><script src="app.js" defer></script><script src="app-2.js" defer></script><script src="app-3.js" defer></script><script src="app-v1-1-polish.js" defer></script>
+  <script src="app-bootstrap.js?v=20260710-startfix3" defer></script><script src="app-core.js?v=20260710-startfix3" defer></script><script src="app-core-2.js?v=20260710-startfix3" defer></script><script src="app-core-3.js?v=20260710-startfix3" defer></script><script src="app-core-4.js?v=20260710-startfix3" defer></script><script src="app-views.js?v=20260710-startfix3" defer></script><script src="app-views-2.js?v=20260710-startfix3" defer></script><script src="app-views-3.js?v=20260710-startfix3" defer></script><script src="app-views-4.js?v=20260710-startfix3" defer></script><script src="app-views-5.js?v=20260710-startfix3" defer></script><script src="app-views-6.js?v=20260710-startfix3" defer></script><script src="app.js?v=20260710-startfix3" defer></script><script src="app-2.js?v=20260710-startfix3" defer></script><script src="app-3.js?v=20260710-startfix3" defer></script><script src="app-v1-1-polish.js?v=20260710-startfix3" defer></script>
 </body>
 </html>
