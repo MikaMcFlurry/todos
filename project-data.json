@@ -17,7 +17,13 @@
         "Before context reset",
         "After specialist subchat completion"
       ],
-      "overdueRule": "A chat is overdue when marked needed/overdue or when meaningful work has no linked backup."
+      "overdueRule": "A chat is overdue when marked needed/overdue or when meaningful work has no linked backup.",
+      "scopeRules": {
+        "globalExport": "Contains all projects, all local project states, conflict copies and all locally stored screenshots.",
+        "projectExport": "Contains only the selected project, its local state and screenshots assigned to that project.",
+        "globalImport": "Accepts global workspace backups and legacy backups; rejects project-scoped V1.1 backups.",
+        "projectImport": "Accepts project-scoped backups and legacy backups; rejects global workspace backups."
+      }
     },
     "repositoryPolicy": {
       "recommendedMode": "private",
@@ -32,6 +38,13 @@
         "Raw chat exports",
         "Real financial data",
         "Secrets and access tokens"
+      ],
+      "privateRepoWorkflow": [
+        "Keep secrets outside repository files even when the repository is private.",
+        "Store raw chat backups only in intentionally protected paths or encrypted archives.",
+        "Review every project-data change before commit.",
+        "Create a global export before structural migrations.",
+        "Use project exports for scoped handoffs and device transfers."
       ]
     }
   },
@@ -59,12 +72,27 @@
       {"id":"workflow-phase-10","order":10,"name":"Maintenance/archive"}
     ],
     "gates": [
-      {"id":"workflow-gate-1","order":1,"name":"Idea understood","requiresMikaApproval":true},
-      {"id":"workflow-gate-2","order":2,"name":"Scope defined","requiresMikaApproval":true},
-      {"id":"workflow-gate-3","order":3,"name":"Implementation ready","requiresMikaApproval":true},
-      {"id":"workflow-gate-4","order":4,"name":"Batch ready","requiresMikaApproval":true},
-      {"id":"workflow-gate-5","order":5,"name":"Batch reviewed","requiresMikaApproval":true},
-      {"id":"workflow-gate-6","order":6,"name":"Beta ready","requiresMikaApproval":true}
+      {"id":"workflow-gate-1","order":1,"name":"Idea understood","requiresMikaApproval":true,"checklist":[{"id":"problem-understood","label":"Problem and goal are understandable."},{"id":"owner-confirmed","label":"Mika confirmed goal and value."}]},
+      {"id":"workflow-gate-2","order":2,"name":"Scope defined","requiresMikaApproval":true,"checklist":[{"id":"scope-documented","label":"Scope and non-goals are documented."},{"id":"open-assumptions-visible","label":"Assumptions, risks and open questions are visible."}]},
+      {"id":"workflow-gate-3","order":3,"name":"Implementation ready","requiresMikaApproval":true,"checklist":[{"id":"architecture-reviewed","label":"Architecture, data model and security frame are reviewed."},{"id":"acceptance-defined","label":"Acceptance criteria and test strategy are defined."}]},
+      {"id":"workflow-gate-4","order":4,"name":"Batch ready","requiresMikaApproval":true,"checklist":[{"id":"handoff-complete","label":"Handoff includes context, allowed files, safety rules and expected result."},{"id":"branch-ready","label":"Branch, scope and test instructions are unambiguous."}]},
+      {"id":"workflow-gate-5","order":5,"name":"Batch reviewed","requiresMikaApproval":true,"checklist":[{"id":"checks-passed","label":"Automated and manual checks are documented."},{"id":"review-complete","label":"Result, deviations and open points were reviewed."}]},
+      {"id":"workflow-gate-6","order":6,"name":"Beta ready","requiresMikaApproval":true,"checklist":[{"id":"beta-criteria-met","label":"Beta or release criteria are met."},{"id":"backup-current","label":"Project state, chats and handoffs have current backups."}]}
+    ],
+    "workflowChain": [
+      {"id":"workflow-chain-project","label":"ChatGPT Project context"},
+      {"id":"workflow-chain-masterchat","label":"Masterchat steering"},
+      {"id":"workflow-chain-subchat","label":"Specialist subchat"},
+      {"id":"workflow-chain-handoff","label":"Reviewed handoff"},
+      {"id":"workflow-chain-implementation","label":"Claude Code / Codex batch"},
+      {"id":"workflow-chain-test","label":"Tests and review"},
+      {"id":"workflow-chain-backup","label":"Status and chat backup"}
+    ],
+    "handoffTypes": [
+      {"id":"handoff-subchat-masterchat","name":"Subchat → Masterchat","purpose":"Return specialist results, decisions and open risks."},
+      {"id":"handoff-masterchat-code","name":"Masterchat → Claude Code / Codex","purpose":"Authorize a bounded implementation batch."},
+      {"id":"handoff-code-review","name":"Implementation → Review","purpose":"Report changed files, tests, limitations and exact branch state."},
+      {"id":"handoff-project-status","name":"Project status backup","purpose":"Preserve durable project context before major transitions."}
     ],
     "repositoryChecklist": [
       "README.md","CHANGELOG.md","CURRENT_STATE.md","docs/00_PROJECT_IDEA.md","docs/01_PROJECT_BRIEFING.md","docs/02_REQUIREMENTS.md","docs/03_SCOPE.md","docs/04_FEATURE_LIST.md","docs/05_NON_GOALS.md","docs/06_ARCHITECTURE.md","docs/07_DATA_MODEL.md","docs/08_UI_UX_STRUCTURE.md","docs/09_TEST_STRATEGY.md","docs/10_SECURITY_PRIVACY.md","docs/decisions/DECISION_LOG.md","ai-workflow/GLOBAL_PROJECT_RULES.md","ai-workflow/MASTERCHAT_RULES.md","ai-workflow/SUBCHAT_RULES.md","ai-workflow/BACKUP_RULES.md","ai-workflow/MODEL_ROUTING_RULES.md","ai-workflow/CLAUDE_CODE_RULES.md","handoffs/claude/","handoffs/subchats/","handoffs/archive/","backups/masterchat/","backups/subchats/","backups/project-status/","project-tool/","tests/","archive/"
