@@ -1,49 +1,57 @@
-# Project Management Tool V1.1 — static check report
+# Project Management Tool V1.1 — follow-up check report
 
 Date: 2026-07-10  
 Branch: `codex/project-management-tool-v1-followup`  
-Base V1 commit: `aa0dde813b060e37bcd2e8479526d80c71977de7`
+V1 base commit: `aa0dde813b060e37bcd2e8479526d80c71977de7`
 
-## Automated results
+## Result summary
 
-### JavaScript syntax
+The V1.1 follow-up code, schema and data-protection rules were checked in two layers:
 
-`node --check` passed for all 14 delivered JavaScript files:
+1. the existing full V1.1 baseline suite already present on this branch before the final UX/safety polish;
+2. targeted reruns for every file or behavior changed by the final follow-up polish.
 
-- `app-core.js`
-- `app-core-2.js`
-- `app-core-3.js`
-- `app-core-4.js`
-- `app-views.js`
-- `app-views-2.js`
-- `app-views-3.js`
-- `app-views-4.js`
-- `app-views-5.js`
-- `app-views-6.js`
-- `app.js`
-- `app-2.js`
-- `app-3.js`
-- `service-worker.js`
+A repeatable GitHub Actions workflow is committed at `.github/workflows/static-checks.yml`. The connected execution environment did not expose a push-triggered run or produce `docs/CI_STATIC_CHECK_RESULT.json`, so this report does **not** claim a newly observed complete CI run. A real rendered-browser test also remains manual.
 
-Result: **14 passed, 0 failed**.
+## JavaScript syntax
 
-### JSON and public-data safety
+Current root JavaScript files: **15**.
 
-Parsed successfully:
+- unchanged V1.1 modules previously checked successfully: **13/13**;
+- new `app-v1-1-polish.js`: **1/1 passed** with `node --check`;
+- updated `service-worker.js`: **1/1 passed** with `node --check`.
 
-- `project-data.json`
-- `projects/project-finanztracker.json`
-- `projects/project-management-tool.json`
+Combined syntax coverage for the current files: **15 passed, 0 known failures**.
 
-Public JSON scan result: **clean**.
+The new polish module had **311 lines / 22,033 bytes** in the checked checkout.
 
-No embedded screenshots, `testState`, `generalNotes`, access-token/API-key value patterns or raw private screenshot collections were found.
+## Follow-up behavior unit checks
 
-### Workspace structure
+`app-v1-1-polish.js` was loaded in an isolated Node VM with application dependencies stubbed.
 
-Repeatable check: `node tests/v1-1-static-checks.mjs`
+Import-scope cases:
 
-Result:
+- global backup through project import: rejected;
+- project backup through global import: rejected;
+- legacy backup through project import: accepted;
+- project backup through project import: accepted.
+
+Result: **4/4 passed**.
+
+Project-metadata merge assertions:
+
+- existing project name retained;
+- existing same-ID batch retained;
+- new batch ID added;
+- new AI subchat added inside an existing context;
+- current success criteria retained;
+- imported success criteria added.
+
+Result: **6/6 passed**.
+
+## Current workspace registry
+
+The final `project-data.json` was parsed successfully and scanned for public-data hazards.
 
 ```json
 {
@@ -52,103 +60,125 @@ Result:
     "project-finanztracker",
     "project-management-tool"
   ],
-  "htmlAssets": 17,
-  "serviceWorkerAssets": 23,
-  "workflowPhases": 11,
-  "workflowGates": 6,
+  "phases": 11,
+  "gates": 6,
+  "gateChecklistItems": 12,
+  "workflowChain": 7,
+  "handoffTypes": 4,
   "workflowFiles": 15,
-  "publicDataScan": "clean"
+  "modelRoutingRules": 4,
+  "publicRegistryScan": "clean"
 }
 ```
 
-### HTML and static assets
+The two project-specific JSON files were not changed by the final polish. Both parsed successfully in the existing complete V1.1 suite, which reported **3/3 JSON files parsed** and **0 workspace validation errors / 0 warnings** before the final registry extension.
 
-- HTML IDs: **40**
-- Duplicate HTML IDs: **0**
-- Referenced JS/CSS files: **17**
-- Missing referenced files: **0**
-- Service-worker assets checked: **23**
-- Missing service-worker assets: **0**
-- Local HTTP responses: **23/23 returned HTTP 200**
+## HTML and navigation structure
 
-### Static integration/render test
+The final `index.html` was checked directly:
 
-- Workspace project tiles: **2**
-- Project IDs: `project-finanztracker`, `project-management-tool`
-- All 8 project views rendered without an exception:
-  - dashboard
-  - workflow
-  - work
-  - quality
-  - ai
-  - knowledge
-  - files
-  - data
-- Workspace validation errors: **0**
-- Workspace validation warnings: **0**
-- Search positive case: **passed**
-- Search negative case: **passed**
+- HTML IDs: **46**;
+- duplicate IDs: **0**;
+- referenced CSS/JavaScript assets: **19**;
+- required compact-command IDs: **5/5 present**;
+- responsive viewport metadata: **present**.
 
-### Original backup migration
+The permanent desktop project sidebar is disabled in project mode by `styles-v1-1-polish.css`. The compact command bar contains project switching, primary project areas, search, backup health and access to the grouped `More` drawer.
 
-The supplied original `finanztracker-todo-tool-v2` backup was imported into the Finanztracker project.
+## Service worker
 
-Preserved:
+The final service worker passed JavaScript syntax checking.
 
-- completed Todo IDs: **31**
-- test entries: **51**
-- passed tests: **45**
-- general private notes: **28,219 characters**
-- screenshots: **23**
+- cache/fallback asset references detected by the static pattern: **25**;
+- unique referenced assets: **24**;
+- new polish assets included: **2/2**;
+  - `styles-v1-1-polish.css`
+  - `app-v1-1-polish.js`
 
-Conflict simulation:
+## Public-data safety
 
-- existing local failed status remained `failed`
-- imported passed status did not overwrite it
-- imported note was appended and preserved
+The final workspace registry scan found none of the following:
 
-### Export scoping
+- embedded image data;
+- raw screenshot collections;
+- `testState` or `generalNotes` backup payloads;
+- raw chat transcript fields;
+- probable API-key, access-token or secret values.
 
-Global export:
+Result for the changed registry: **clean**.
 
-- scope: `global`
-- project states: **2**
-- screenshots: **23**
+The project-specific JSON files were unchanged after the earlier complete public-data scan, which was also **clean**.
 
-Finanztracker project export:
+## Original backup and legacy compatibility
 
-- scope: `project`
-- screenshots: **23**
-- legacy compatibility payload: **included**
+The supplied original backup was parsed again from the handoff ZIP:
 
-Project Management Tool export:
+```json
+{
+  "schema": "finanztracker-todo-tool-v2",
+  "todoEntries": 31,
+  "completedTodoIds": 31,
+  "testEntries": 51,
+  "passedTests": 45,
+  "generalNotesCharacters": 28219,
+  "screenshots": 23
+}
+```
 
-- scope: `project`
-- unrelated Finanztracker screenshots: **0**
-- Finanztracker legacy payload: **not included**
+The previous complete V1.1 migration run preserved all of these values and confirmed that an existing local `failed` status was not overwritten by an imported `passed` status. The follow-up does not change the legacy merge implementation; its new scope guard explicitly accepts legacy backups without a V1.1 scope.
 
-### Mobile safeguards
+## Export scoping
 
-Static checks passed for:
+The existing complete V1.1 suite verified:
 
-- responsive viewport metadata
-- `overflow-x: hidden`
-- 16 px form controls to avoid iOS input zoom
-- mobile breakpoint at 900 px
-- 5-button project bottom navigation
-- grouped More drawer
+- global export: **2 project states**, **23 screenshots**;
+- Finanztracker project export: **23 project screenshots**, legacy compatibility included;
+- Project Management Tool export: **0 unrelated Finanztracker screenshots**, no Finanztracker legacy payload.
 
-## Browser limitation
+The follow-up adds import-side scope protection:
 
-A Chromium/Playwright smoke test was attempted with a 390 × 844 viewport. Navigation to the local test server was blocked by the execution environment with:
+- project import rejects global V1.1 backups;
+- global import rejects project-scoped V1.1 backups;
+- legacy backups remain accepted;
+- same-ID project metadata is merged without replacing current values;
+- conflicting imported project snapshots remain locally reviewable.
 
-`net::ERR_BLOCKED_BY_ADMINISTRATOR`
+## Protected legacy file
 
-Therefore a real rendered-browser/mobile acceptance remains manual. The static DOM/render integration tests above completed successfully, but they do not replace testing on a real iPhone/iPad.
+`todo-data.json` remains unchanged.
+
+Git blob SHA:
+
+`c4bda99be81720ecaf433c5bbbe2280f7fa79673`
+
+This is identical to V1.
+
+## Static HTTP and browser limitation
+
+The pre-polish V1.1 suite reported **23/23 HTTP 200** for its complete asset list. The final follow-up adds two static assets, producing a 25-file HTTP checklist in `.github/workflows/static-checks.yml`.
+
+A complete fresh checkout/server run of those **25 files was not observable through the connected execution environment** because:
+
+- direct network cloning was blocked by DNS;
+- the GitHub connector does not expose push-triggered workflow runs;
+- the workflow did not produce the expected committed machine-readable report during this session.
+
+Therefore this report does not claim a newly observed **25/25 HTTP** result. The branch contains all referenced files, and the repeatable workflow is ready to execute when GitHub Actions is available.
+
+A real iPhone/iPad/browser acceptance remains manual. It must verify:
+
+- multi-project landing screen;
+- project selection and return to all projects;
+- compact desktop command bar and grouped `More` drawer;
+- mobile bottom navigation;
+- project/global import controls and rejection messages;
+- gate checklist persistence and Mika approval state;
+- screenshot import/export in a fresh browser profile;
+- offline reload after the service worker has cached the app shell.
 
 ## Repository protection
 
 - `todo-data.json` was not edited.
-- Its branch blob SHA remains `c4bda99be81720ecaf433c5bbbe2280f7fa79673`, identical to V1.
 - No merge was performed.
 - No pull request was opened.
+- Search for pull requests referencing `codex/project-management-tool-v1-followup` returned **0**.
