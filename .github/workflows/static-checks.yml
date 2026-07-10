@@ -1,0 +1,90 @@
+name: Static checks
+
+on:
+  push:
+    branches:
+      - codex/project-management-tool-v1-followup
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          count=0
+          while IFS= read -r file; do
+            node --check "$file"
+            count=$((count + 1))
+          done < <(find . -maxdepth 1 -type f -name '*.js' -printf '%f\n' | sort)
+          echo "JavaScript files checked: $count"
+
+      - name: Workspace, JSON, privacy and legacy checks
+        run: node tests/v1-1-static-checks.mjs
+
+      - name: Static HTTP load
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8000 >/tmp/pm-tool-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          sleep 2
+          files=(
+            index.html
+            project-data.json
+            todo-data.json
+            projects/project-finanztracker.json
+            projects/project-management-tool.json
+            styles.css
+            styles-features.css
+            styles-responsive.css
+            styles-components.css
+            styles-v1-1-polish.css
+            app-core.js
+            app-core-2.js
+            app-core-3.js
+            app-core-4.js
+            app-views.js
+            app-views-2.js
+            app-views-3.js
+            app-views-4.js
+            app-views-5.js
+            app-views-6.js
+            app.js
+            app-2.js
+            app-3.js
+            app-v1-1-polish.js
+            service-worker.js
+          )
+          passed=0
+          for file in "${files[@]}"; do
+            status=$(curl --silent --output /dev/null --write-out '%{http_code}' "http://127.0.0.1:8000/$file")
+            test "$status" = "200"
+            passed=$((passed + 1))
+          done
+          echo "Static HTTP responses: $passed/${#files[@]} returned 200"
+
+      - name: Report protected legacy file SHA
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const body = fs.readFileSync('todo-data.json');
+          const sha = crypto.createHash('sha1').update(Buffer.concat([Buffer.from(`blob ${body.length}\0`), body])).digest('hex');
+          console.log(`todo-data.json git blob SHA: ${sha}`);
+          if (sha !== 'c4bda99be81720ecaf433c5bbbe2280f7fa79673') process.exit(1);
+          NODE
