@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mika-ai-project-management-v1-1-startfix-2026-07-10';
+const CACHE_NAME = 'mika-ai-project-management-v1-1-syntaxfix-2026-07-10';
 const APP_SHELL = [
   './','./index.html','./styles.css','./styles-features.css','./styles-responsive.css','./styles-components.css','./styles-v1-1-polish.css',
   './app-bootstrap.js','./app-core.js','./app-core-2.js','./app-core-3.js','./app-core-4.js',
@@ -17,14 +17,15 @@ self.addEventListener('activate',event=>{
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
   const request=event.request;
+  const freshRequest=new Request(request,{cache:'no-store'});
   if(request.mode==='navigate'){
-    event.respondWith(fetch(request).then(response=>{
+    event.respondWith(fetch(freshRequest).then(response=>{
       if(response.ok){const copy=response.clone();caches.open(CACHE_NAME).then(cache=>cache.put('./index.html',copy)).catch(()=>{});}
       return response;
     }).catch(()=>caches.match('./index.html')));
     return;
   }
-  event.respondWith(fetch(request).then(response=>{
+  event.respondWith(fetch(freshRequest).then(response=>{
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
     const copy=response.clone();
     caches.open(CACHE_NAME).then(cache=>cache.put(request,copy)).catch(()=>{});
