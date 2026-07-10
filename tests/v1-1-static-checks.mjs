@@ -6,6 +6,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const bytes = file => fs.readFileSync(path.join(root, file));
 const exists = file => fs.existsSync(path.join(root, file));
+const stripUrlSuffix = value => String(value).split('#')[0].split('?')[0];
 const fail = message => { throw new Error(message); };
 const gitBlobSha = file => {
   const body = bytes(file);
@@ -26,21 +27,37 @@ if (!ids.includes('project-finanztracker') || !ids.includes('project-management-
 
 const html = read('index.html');
 const refs = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map(match => match[1]).filter(ref => !ref.startsWith('http'));
-const missingRefs = refs.filter(ref => !exists(ref));
+const assetPaths = refs.map(stripUrlSuffix);
+const missingRefs = assetPaths.filter(ref => !exists(ref));
 if (missingRefs.length) fail(`Missing HTML assets: ${missingRefs.join(', ')}`);
 for (const requiredId of ['projectCommandBar','projectQuickSwitch','projectCommandNav','projectCommandSearch','projectDesktopMoreButton']) {
   if (!html.includes(`id="${requiredId}"`)) fail(`Missing compact cockpit element: ${requiredId}`);
 }
+if (!assetPaths.includes('app-bootstrap.js')) fail('Startup watchdog script is not loaded by index.html.');
 const htmlIds = [...html.matchAll(/id="([^"]+)"/g)].map(match => match[1]);
 const duplicateHtmlIds = htmlIds.filter((id,index) => htmlIds.indexOf(id) !== index);
 if (duplicateHtmlIds.length) fail(`Duplicate HTML IDs: ${[...new Set(duplicateHtmlIds)].join(', ')}`);
 
 const serviceWorker = read('service-worker.js');
 const cachedAssets = [...serviceWorker.matchAll(/'\.\/([^']*)'/g)].map(match => match[1]).filter(Boolean);
-const missingCacheAssets = cachedAssets.filter(ref => !exists(ref));
+const missingCacheAssets = cachedAssets.filter(ref => !exists(stripUrlSuffix(ref)));
 if (missingCacheAssets.length) fail(`Missing service-worker assets: ${missingCacheAssets.join(', ')}`);
-for (const requiredAsset of ['styles-v1-1-polish.css','app-v1-1-polish.js']) {
-  if (!cachedAssets.includes(requiredAsset)) fail(`Follow-up asset missing from service worker: ${requiredAsset}`);
+for (const requiredAsset of ['app-bootstrap.js','styles-v1-1-polish.css','app-v1-1-polish.js']) {
+  if (!cachedAssets.includes(requiredAsset)) fail(`Required asset missing from service worker: ${requiredAsset}`);
+}
+if (serviceWorker.includes("hit||caches.match('./index.html')")) fail('Service worker still falls back to HTML for arbitrary missing assets.');
+if (!serviceWorker.includes("caches.match(request,{ignoreSearch:true})")) fail('Service worker does not support versioned asset cache fallback.');
+
+const bootstrapJs = read('app-bootstrap.js');
+for (const requiredMarker of ['PM_BOOTSTRAP_WORKSPACE','__pmMarkReady','__pmResetAppCache','Der Start wurde abgebrochen']) {
+  if (!bootstrapJs.includes(requiredMarker)) fail(`Missing startup recovery marker: ${requiredMarker}`);
+}
+const core2Js = read('app-core-2.js');
+if (!core2Js.includes('AbortController')) fail('JSON loader has no abort timeout.');
+if (!core2Js.includes('timeoutMs=6500')) fail('Expected bounded JSON startup timeout.');
+const app3Js = read('app-3.js');
+for (const requiredMarker of ['PM_BOOTSTRAP_WORKSPACE','hydrateWorkspaceRegistry(raw,fallback','window.__pmMarkReady?.()','App-Cache zurücksetzen']) {
+  if (!app3Js.includes(requiredMarker)) fail(`Missing resilient startup marker: ${requiredMarker}`);
 }
 
 const publicFiles = ['project-data.json', ...registry.projectFiles.map(ref => ref.path)];
@@ -94,6 +111,10 @@ console.log(JSON.stringify({
   htmlIds: htmlIds.length,
   duplicateHtmlIds: 0,
   serviceWorkerAssets: cachedAssets.length,
+  startupWatchdog: 'present',
+  jsonTimeoutMs: 6500,
+  safeWorkspaceFallback: 'present',
+  serviceWorkerTypedFallback: 'present',
   workflowPhases: workflow.lifecyclePhases.length,
   workflowGates: workflow.gates.length,
   gateChecklistItems: workflow.gates.reduce((sum,gate)=>sum+gate.checklist.length,0),
