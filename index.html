@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="styles-features.css">
   <link rel="stylesheet" href="styles-responsive.css">
   <link rel="stylesheet" href="styles-components.css">
+  <link rel="stylesheet" href="styles-v1-1-polish.css">
 </head>
 <body data-context="workspace">
   <header class="app-header">
@@ -43,6 +44,7 @@
       <strong>Privat-Repo empfohlen:</strong> Committe nur freigegebene Projektmetadaten. Persönliche Notizen, Screenshots und Chat-Backups bleiben lokal beziehungsweise in verschlüsselten Exporten.
     </div>
   </header>
+
   <div class="app-shell">
     <aside class="project-sidebar desktop-only hidden" id="projectSidebar" aria-label="Projektnavigation">
       <div class="sidebar-project-context"><span class="sidebar-project-label">Aktives Projekt</span><strong id="sidebarProjectName">—</strong><button class="button button-small button-ghost" type="button" data-back-workspace>Projekt wechseln</button></div>
@@ -50,11 +52,33 @@
       <nav id="desktopProjectNav" class="grouped-nav"></nav>
       <div class="sidebar-footer"><div class="safety-chip"><span>🔒</span><span>Lokale Nutzerdaten werden nicht automatisch ins Repo geschrieben.</span></div></div>
     </aside>
+
     <main id="mainContent" class="main-content" tabindex="-1">
+      <section id="projectCommandBar" class="project-command-bar hidden" aria-label="Kompakte Projektnavigation">
+        <div class="project-command-context">
+          <button class="project-home-button" type="button" data-back-workspace aria-label="Zur Projektübersicht">←</button>
+          <label>
+            <span class="field-label">Projekt</span>
+            <select id="projectQuickSwitch" aria-label="Aktives Projekt wechseln"></select>
+          </label>
+        </div>
+        <nav id="projectCommandNav" class="project-command-nav" aria-label="Hauptbereiche des Projekts"></nav>
+        <div class="project-command-tools">
+          <label class="command-search">
+            <span class="field-label">Suchen</span>
+            <input id="projectCommandSearch" type="search" placeholder="Projekt durchsuchen …" autocomplete="off">
+          </label>
+          <span id="projectCommandBackupBadge" class="badge badge-success">Backups aktuell</span>
+          <button class="button button-secondary" id="projectDesktopMoreButton" type="button">Mehr Bereiche</button>
+        </div>
+      </section>
+
       <div id="loadingState" class="card loading-card"><div class="spinner" aria-hidden="true"></div><div><strong>Workspace wird geladen</strong><p>Projektregister, lokale Zustände und Legacy-Daten werden sicher zusammengeführt.</p></div></div>
-      <div id="errorState" class="card error-card hidden" role="alert"></div><div id="viewRoot"></div>
+      <div id="errorState" class="card error-card hidden" role="alert"></div>
+      <div id="viewRoot"></div>
     </main>
   </div>
+
   <nav class="mobile-bottom-nav project-bottom-nav mobile-only hidden" id="projectBottomNav" aria-label="Projekt-Schnellnavigation"><button type="button" data-view="dashboard"><span>⌂</span>Übersicht</button><button type="button" data-view="work"><span>▦</span>Umsetzung</button><button type="button" data-view="quality"><span>✓</span>Qualität</button><button type="button" data-view="ai"><span>AI</span>KI</button><button type="button" id="projectMoreButton"><span>•••</span>Mehr</button></nav>
   <div id="drawerBackdrop" class="drawer-backdrop hidden"></div>
   <aside id="mobileDrawer" class="mobile-drawer hidden" aria-label="Projektmenü" aria-hidden="true">
@@ -64,8 +88,10 @@
     <nav id="mobileProjectNav" class="grouped-nav"></nav>
     <div class="drawer-actions"><button class="button button-primary" id="drawerProjectExport" type="button">Dieses Projekt exportieren</button><label class="button button-secondary file-button">Projektbackup importieren<input id="drawerProjectImport" type="file" accept="application/json"></label><button class="button button-ghost" id="drawerGlobalExport" type="button">Globales Backup exportieren</button><label class="button button-ghost file-button">Globales Backup importieren<input id="drawerGlobalImport" type="file" accept="application/json"></label><div class="static-limit-note"><strong>Manueller Workflow:</strong> Die statische App kann Chats nicht selbstständig aus ChatGPT übernehmen. Backups und Status werden bewusst hinzugefügt oder importiert.</div></div>
   </aside>
+
   <dialog id="entryDialog"><form method="dialog" id="entryForm"><div class="dialog-head"><div><p class="eyebrow" id="dialogEyebrow">Neuer Eintrag</p><h2 id="dialogTitle">Eintrag anlegen</h2></div><button class="icon-button" type="button" data-dialog-close aria-label="Dialog schließen">×</button></div><div id="dialogFields" class="form-grid"></div><div class="dialog-actions"><button class="button button-ghost" type="button" data-dialog-close>Abbrechen</button><button class="button button-primary" id="dialogSubmit" value="default">Lokal speichern</button></div></form></dialog>
   <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
-  <script src="app-core.js" defer></script><script src="app-core-2.js" defer></script><script src="app-core-3.js" defer></script><script src="app-core-4.js" defer></script><script src="app-views.js" defer></script><script src="app-views-2.js" defer></script><script src="app-views-3.js" defer></script><script src="app-views-4.js" defer></script><script src="app-views-5.js" defer></script><script src="app-views-6.js" defer></script><script src="app.js" defer></script><script src="app-2.js" defer></script><script src="app-3.js" defer></script>
+
+  <script src="app-core.js" defer></script><script src="app-core-2.js" defer></script><script src="app-core-3.js" defer></script><script src="app-core-4.js" defer></script><script src="app-views.js" defer></script><script src="app-views-2.js" defer></script><script src="app-views-3.js" defer></script><script src="app-views-4.js" defer></script><script src="app-views-5.js" defer></script><script src="app-views-6.js" defer></script><script src="app.js" defer></script><script src="app-2.js" defer></script><script src="app-3.js" defer></script><script src="app-v1-1-polish.js" defer></script>
 </body>
 </html>
