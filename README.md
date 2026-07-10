@@ -1,43 +1,60 @@
-# KI-Projektmanagement-Tool
+# KI-Projektmanagement-Tool V1.1
 
-Statische, GitHub-Pages-fähige Projektübersicht für KI-gestützte Projekte. Die erste Datenbasis beschreibt den Finanztracker, die Oberfläche und das Schema sind jedoch projektübergreifend aufgebaut.
+Statisches Multi-Projekt-Cockpit für standardisierte KI-Projektworkflows. Die Anwendung startet mit einer globalen Projektübersicht und öffnet anschließend projektbezogene Cockpits.
 
-## Dateien
+## V1.1 highlights
 
-- `index.html`, `styles.css`, `app-core.js`, `app-views.js`, `app.js`: statische Anwendung ohne Build-Schritt.
-- `project-data.json`: bereinigte öffentliche Projektstruktur.
-- `todo-data.json`: unveränderte Legacy-Quelle für bestehende Batch- und Test-IDs.
-- `service-worker.js`: Offline-Cache nach dem ersten erfolgreichen Laden.
+- Multi-project dashboard with Finanztracker and Project Management Tool seed projects.
+- Project-specific dashboards and grouped navigation instead of one long side menu.
+- Standard workflow phases 0–10 and approval gates 1–6.
+- AI / Chats hierarchy for ChatGPT projects, masterchat, subchats, Claude Code, Gemini and Suno.
+- Model-routing rules, workflow-file checklist, handoffs and chat-backup states.
+- Global and project-specific backup export/import.
+- Non-destructive migration from V1 and `finanztracker-todo-tool-v2` backups.
+- Existing `todo-data.json` remains an unchanged legacy source for Finanztracker IDs and tests.
 
-## Datensicherheit
+## Files
 
-Persönliche Inhalte werden **nicht** in `project-data.json` geschrieben. Folgende Daten bleiben im Browser und werden nur in lokalen Backup-Dateien exportiert:
+- `index.html`, `styles.css`, `app-core.js`, `app-views.js`, `app.js`: static application without build tooling.
+- `project-data.json`: sanitized V1.1 workspace and project metadata.
+- `todo-data.json`: unchanged legacy source.
+- `service-worker.js`: offline app-shell cache.
+- `docs/STATIC_LIMITATIONS_AND_PRIVATE_REPO_GUIDE.md`: security and hosting boundary.
+- `docs/MANUAL_TEST_CHECKLIST_V1_1.md`: browser and migration acceptance checklist.
 
-- Mika-Aufgaben und deren Status
-- Testresultate, Geräte-/Browser-/Umgebungsangaben
-- Testnotizen und tatsächliche Ergebnisse
-- Screenshots
-- private Schnellnotizen und allgemeine Legacy-Notizen
-- lokal ergänzte Bugs, Fragen, Ideen und Entscheidungen
+## Data separation
 
-Vor größeren Änderungen sollte über die sichtbare Schaltfläche ein Backup exportiert werden.
+Committed project metadata must remain sanitized. These values stay local and are included only in protected exports:
 
-## Migration
+- Mika tasks and private notes,
+- test results and actual-result text,
+- screenshots,
+- local bugs, questions, ideas and decisions,
+- chat backup references that are not safe to publish,
+- unknown legacy IDs and conflict copies.
 
-Die App lädt bevorzugt `project-data.json` und ergänzt fehlende historische Batches/Tests aus `todo-data.json`. Bestehende IDs bleiben unverändert.
+## Repository mode
 
-Unterstützte Importformate:
+A private repository is recommended for real project use. The static app does not implement authentication or automatic chat ingestion. It tracks manual or explicitly ChatGPT-assisted backup status only.
 
-- `finanztracker-todo-tool-v2`
-- `ai-project-management-tool-v1`
-- ältere Backups mit `done`, `notes`, `todoState` oder `testState`
+See `docs/STATIC_LIMITATIONS_AND_PRIVATE_REPO_GUIDE.md`.
 
-Imports werden nicht-destruktiv zusammengeführt. Unbekannte Legacy-IDs bleiben im lokalen Backup erhalten und werden nicht verworfen.
-
-## Lokaler Test
+## Local test
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Danach `http://localhost:8000` öffnen. Für die Abnahme insbesondere das Originalbackup importieren, erneut exportieren und in einem frischen Browserprofil prüfen.
+Open `http://localhost:8000`. Use the original legacy backup for migration testing and repeat global/project exports in a fresh browser profile.
+
+## Compatibility
+
+Supported imports:
+
+- `finanztracker-todo-tool-v2`
+- `ai-project-management-tool-v1`
+- `mika-ai-project-management-backup-v1.1` global scope
+- `mika-ai-project-management-backup-v1.1` project scope
+- older payloads containing `done`, `todoState`, `testState`, `notes` or `generalNotes`
+
+Imports merge by stable IDs. Local user values are not silently overwritten; conflicts are retained.
