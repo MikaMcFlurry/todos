@@ -1,9 +1,9 @@
-const CACHE_NAME = 'mika-ai-project-management-v1-1-2026-07-10';
+const CACHE_NAME = 'mika-ai-project-management-v1-1-polish-2026-07-10';
 const APP_SHELL = [
-  './','./index.html','./styles.css','./styles-features.css','./styles-responsive.css','./styles-components.css',
+  './','./index.html','./styles.css','./styles-features.css','./styles-responsive.css','./styles-components.css','./styles-v1-1-polish.css',
   './app-core.js','./app-core-2.js','./app-core-3.js','./app-core-4.js',
   './app-views.js','./app-views-2.js','./app-views-3.js','./app-views-4.js','./app-views-5.js','./app-views-6.js',
-  './app.js','./app-2.js','./app-3.js','./project-data.json','./projects/project-finanztracker.json','./projects/project-management-tool.json','./todo-data.json'
+  './app.js','./app-2.js','./app-3.js','./app-v1-1-polish.js','./project-data.json','./projects/project-finanztracker.json','./projects/project-management-tool.json','./todo-data.json'
 ];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
